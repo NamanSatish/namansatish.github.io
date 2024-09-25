@@ -1779,9 +1779,9 @@ When I originally took these two images, I was quite sad because if I had taken 
 {% enddetails %}
 </div>
 
-#### Wink and Joy : Success
+#### Wink and Joy : Failure
 
-Here, we can move facial expressions across images. The facial expressions are blended seamlessly, however, the mask could be improved.
+Here, we can move facial expressions across images. The facial expressions are blended seamlessly, however, because we expect the jaw to move along with the mouth, the jawline in our blended image causes us to question the image. This is both a limitation of the mask and the source data available. The poor blend could additionally be amplified by the Uncanny Valley effect, a phenomenon where our perception of near human-like objects is more negative than objects that are clearly not human-like. This is why the blended image looks a bit off, the expectations from what a human face should look like are not met.
 
 <div class="row l-page mx-auto">
     <div class="col-sm mt-3 mt-md-0">
@@ -1942,5 +1942,169 @@ Here, we can move facial expressions across images. The facial expressions are b
     </div>
 </div>
 {% enddetails %}
+</div>
 
+#### Wink and Joy Attempt 2 : Success
+
+In this attempt, I chose to blend the eye component from the wink image atop the joy image. This was a success because the eyes are a more isolated part of the face and the blend is more seamless. The result is a convincing image that does not trigger the Uncanny Valley effect. This is a good example of how the choice of mask, as well as area blended, can affect the final image.
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Sameer/joy_MR_2.jpg" %}
+        <div class="caption">Joy</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Sameer/wink_MR_2.jpg" %}
+        <div class="caption">Wink</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Sameer/mask_MR_2.jpg" %}
+        <div class="caption">Mask</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res_Collapsed.jpg" %}
+        <div class="caption">Wink Joy Blended</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+{%details Image Stack %}
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_0.jpg" %}
+    <div class="caption">Wink Laplacian 0</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_0.jpg" %}
+    <div class="caption">Masked Wink Laplacian 0</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res0.jpg" %}
+    <div class="caption">Wink Joy Blend 0</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_0.jpg" %}
+    <div class="caption">Masked Joy Laplacian 0</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_0.jpg" %}
+    <div class="caption">Joy Laplacian 0</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_1.jpg" %}
+    <div class="caption">Wink Laplacian 1</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_1.jpg" %}
+    <div class="caption">Masked Wink Laplacian 1</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res1.jpg" %}
+    <div class="caption">Wink Joy Blend 1</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_1.jpg" %}
+    <div class="caption">Masked Joy Laplacian 1</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_1.jpg" %}
+    <div class="caption">Joy Laplacian 1</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_2.jpg" %}
+    <div class="caption">Wink Laplacian 2</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_2.jpg" %}
+    <div class="caption">Masked Wink Laplacian 2</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res2.jpg" %}
+    <div class="caption">Wink Joy Blend 2</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_2.jpg" %}
+    <div class="caption">Masked Joy Laplacian 2</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_2.jpg" %}
+    <div class="caption">Joy Laplacian 2</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_3.jpg" %}
+    <div class="caption">Wink Laplacian 3</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_3.jpg" %}
+    <div class="caption">Masked Wink Laplacian 3</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res3.jpg" %}
+    <div class="caption">Wink Joy Blend 3</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_3.jpg" %}
+    <div class="caption">Masked Joy Laplacian 3</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_3.jpg" %}
+    <div class="caption">Joy Laplacian 3</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_4.jpg" %}
+    <div class="caption">Wink Laplacian 4</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_4.jpg" %}
+    <div class="caption">Masked Wink Laplacian 4</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res4.jpg" %}
+    <div class="caption">Wink Joy Blend 4</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_4.jpg" %}
+    <div class="caption">Masked Joy Laplacian 4</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_4.jpg" %}
+    <div class="caption">Joy Laplacian 4</div>
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Laplacian_5.jpg" %}
+    <div class="caption">Wink Laplacian 5</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Wink_2_Masked_Laplacian_5.jpg" %}
+    <div class="caption">Masked Wink Laplacian 5</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Multi_Res5.jpg" %}
+    <div class="caption">Wink Joy Blend 5</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Masked_Laplacian_5.jpg" %}
+    <div class="caption">Masked Joy Laplacian 5</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj2/Extras/Image_Stacks/Wink_2_Joy_2/Joy_2_Laplacian_5.jpg" %}
+    <div class="caption">Joy Laplacian 5</div>
+    </div>
+</div>
+{% enddetails %}
 </div>
