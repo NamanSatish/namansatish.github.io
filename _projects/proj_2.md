@@ -9,6 +9,7 @@ images:
   compare: true
   slider: true
 pretty_table: true
+bibliography: empty.bib
 toc:
   - name: Filters
   - name: Gaussian Filters
