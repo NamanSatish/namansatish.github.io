@@ -12,6 +12,11 @@ toc:
   - name: "Warping Images"
   - name: "Blending"
   - name: "Rectification"
+  - name: "Detecting Corner features"
+  - name: "ANMS"
+  - name: "Corner Features"
+  - name: "Matches"
+  - name: "RANSAC"
 ---
 
 # Photos
@@ -515,3 +520,112 @@ I took a picture of a fun Pikachu graphic, and I want to use it as my background
 </div>
 {% enddetails %}
 </div>
+
+# Detecting Corner Features
+
+In this section, we computed a Harris matrix for our image, and chose the peaks with a limitation of a growing maximum in a region until we had a reasonable number of peaks. This was necessary to keep our values feasible for vectorization. I found around 45,000 to be the vectorization limit, and about 10,000 was a good compromise between speed and accuracy.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_tower_harris_values.jpg" alt="Tokyo Tower Harris Values" %}
+        <div class="caption">Harris values for Tokyo Tower</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_bridge_harris_values.jpg" alt="Tokyo Bridge Harris Values" %}
+        <div class="caption">Harris values for Tokyo Bridge</div>
+    </div>
+</div>
+
+# ANMS
+
+We then used the ANMS algorithm to select the best corners. This was done by computing the minimum radius before suppression and keeping the top `n` with the highest radius.
+There is an optional robustness variable that helps limit suppression, where a value of 1 enforces separation between points but loses some strong corners.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_tower_ANMS_Robust_Comparison.jpg" alt="Tokyo Tower ANMS Robustness Comparison" %}
+        <div class="caption">ANMS Robustness Comparison on Tokyo Tower</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_bridge_ANMS_Robust_Comparison.jpg" alt="Tokyo Bridge ANMS Robustness Comparison" %}
+        <div class="caption">ANMS Robustness Comparison on Tokyo Bridge</div>
+    </div>
+</div>
+
+# Corner Features
+
+Now we can sample a 40x40 region around corners and downsample to 8x8 to get a descriptor for each corner. We assume the images are already axis-aligned.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_tower_top_20_8x8_Feature_Descriptors.jpg" alt="Tokyo Tower Corner Features" %}
+        <div class="caption">Tokyo Tower Corner Features</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_bridge_top_20_8x8_Feature_Descriptors.jpg" alt="Tokyo Bridge Corner Features" %}
+        <div class="caption">Tokyo Bridge Corner Features</div>
+    </div>
+</div>
+
+Here are the descriptors after normalizing and standardizing the values, making them more robust to lighting changes and other factors.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_bridge_top_20_8x8_Feature_Descriptors_Standardized_Normalized.jpg" alt="Tokyo Bridge Corner Features Normalized/Standardized" %}
+        <div class="caption">Tokyo Bridge Corner Features (Normalized/Standardized)</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_tower_top_20_8x8_Feature_Descriptors_Standardized_Normalized.jpg" alt="Tokyo Tower Corner Features Normalized/Standardized" %}
+        <div class="caption">Tokyo Tower Corner Features (Normalized/Standardized)</div>
+    </div>
+</div>
+
+# Matches
+
+We compute the difference between how well a descriptor matches to its closest match and its second-closest match. This helps determine if a match is good, filtering out bad matches.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/figures/tokyo_tower_bridge_matches.jpg" alt="Tokyo Tower and Bridge Matches" %}
+        <div class="caption">Feature Matches between Tokyo Tower and Bridge</div>
+    </div>
+</div>
+
+# RANSAC
+
+Finally, we use RANSAC to find a good homography matrix, which allows us to warp the images together and blend them into a seamless mosaic.
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/RANSAC/tokyotower.png" alt="Tokyo Tower RANSAC" %}
+        <div class="caption">RANSAC Result for Tokyo Tower</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/landscape/tokyo_tower/mosaic_combined.png" alt="Tokyo Tower Mosaic" %}
+        <div class="caption">Tokyo Tower Mosaic</div>
+    </div>
+</div>
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/RANSAC/baybridge.png" alt="Bay Bridge RANSAC" %}
+        <div class="caption">RANSAC Result for Bay Bridge</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/landscape/bay_bridge_2/mosaic_combined.png" alt="Bay Bridge Mosaic" %}
+        <div class="caption">Bay Bridge Mosaic</div>
+    </div>
+</div>
+
+<div class="row l-page">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/RANSAC/church.png" alt="Mission San Francisco RANSAC" %}
+        <div class="caption">RANSAC Result for Mission San Francisco</div>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/landscape/mission_sanfrancisco_2/mosaic_combined.png" alt="Mission San Francisco Mosaic" %}
+        <div class="caption">Mission San Francisco Mosaic</div>
+    </div>
+</div>
+
+The coolest thing I learned in this project was definitely the rectification process. It was fascinating to see how a skewed image of a document could be rectified to make it legible—something useful in many applications!
