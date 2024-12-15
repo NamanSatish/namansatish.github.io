@@ -1357,6 +1357,269 @@ assets/img/cs180/projfinal/output/validation_view_10_iter_5000.png
     </div>
 </div>
 
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_3250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_3500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_3750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_4000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_4250.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_4500.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_4750.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
+
+<div class="row l-page mx-auto">
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_1_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_2_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_3_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_4_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_5_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_6_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_7_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_8_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_9_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/validation_view_10_iter_5000.png" class="img-fluid rounded z-depth-1" zoomable=true%}
+    </div>
+</div>
 {% enddetails %}
 
 </div>
@@ -1369,4 +1632,12 @@ Here is the rendering of a novel view not in the training dataset!
 
 <div class="row l-page mx-auto">
     {% include figure.liquid path="assets/img/cs180/projfinal/output/test_images.gif" class="img-fluid rounded z-depth-1" zoomable=true%}
+</div>
+
+# Bells and Whistles
+
+And when we make some changes to our rendering to use our opacity to interpret when rays are not hitting any objects, we can get the following:
+
+<div class="row l-page mx-auto">
+    {% include figure.liquid path="assets/img/cs180/projfinal/output/test_images_color.gif" class="img-fluid rounded z-depth-1" zoomable=true%}
 </div>
