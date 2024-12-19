@@ -214,6 +214,12 @@ Our method for transforming hand points in the camera frame to the robot base fr
 
 # Team
 
+<div class="row mx-auto">
+  <div class="col-sm mt-3 mt-md-0">
+  {% include figure.liquid path="assets/img/ee106a/team_photo.jpg" class="img-fluid rounded z-depth-1" zoomable=true %}
+  </div>
+</div>
+
 ## Members
 
 1. Saurav Suresh: Senior majoing in Computer Science and Math.
@@ -245,3 +251,5 @@ https://drive.google.com/file/d/1uUCDI7Fie_2VFIInZSgS9vOE47zhxm4-/view?usp=drive
 [Software Demo Video](https://drive.google.com/file/d/1uUCDI7Fie_2VFIInZSgS9vOE47zhxm4-/view?usp=drive_link)
 
 [Handshake Video](https://drive.google.com/file/d/1KpU2-hxeUGlkkliAK7MLH2-zhfnthcEd/view?usp=drive_link)
+
+[Project Presentation](https://docs.google.com/presentation/d/1GoCEK2VPXtKTkxlpo6xZE2zSntcXuxX6zAFLYc7gf7s/edit?usp=sharing)
