@@ -9,6 +9,10 @@ category: school
 bibliography: empty.bib
 toc:
   - name: "Introduction"
+  - name: "Design"
+  - name: "Implementation"
+  - name: "Results"
+  - name: "Conclusion"
 authors:
   - name: Alexander Lui
     affiliations:
@@ -22,6 +26,28 @@ authors:
   - name: Saurav Suresh
     affiliations:
       name: UC Berkeley
+_styles: >
+  .fake-img {
+    background: #bbb;
+    border: 1px solid rgba(51, 48, 215, 0.1);
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  .fake-img p {
+    font-family: monospace;
+    color: white;
+    text-align: left;
+    margin: 12px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  #inspirational_quote {
+    font-style: italic;
+    color: #555;
+    text-align: center;
+    margin: 20px 0;
+    /* background-color: #f9f9f9; */
+  }
 ---
 
 # Introduction
@@ -30,25 +56,18 @@ authors:
 
 Our goal was to create a robot that could perform a handshake with a human.
 
-<div class="row l-page mx-auto" style="text-align: center;">
-“humanity lies in the details – a truly human-like robot needs to do the very human task of giving a handshake” - Team 38
+<div class="row mx-auto" style="text-align: center;">
+  <div class="col-sm mt-3 mt-md-0" id="inspirational_quote">
+    “humanity lies in the details – a truly human-like robot needs to do the very human task of giving a handshake” - Team 38
+  </div>
 </div>
 
-Robots may appear inherently inhuman, with mechanical components designed to move through space with precision and speed, yet lacking an organic touch. Our project aimed to bridge this gap by creating a robot that could perform a handshake with a human, turning robotic motion into something organic and human-like. This task is deceptively simple, as it requires a robot to move through it's joint space in a way that is both precise and fluid, while also being able to sense the presence of a human hand and adjust its motion accordingly.
-
-## Hardware
-
-<div class="row l-page mx-auto">
-1 - [Sawyer Robot by Rethink Robotics](https://robotsguide.com/robots/sawyer)
-</div>
-<div class="row l-page mx-auto">
-1 - [Intel RealSense Depth Camera D435](https://www.intelrealsense.com/depth-camera-d435/)
-</div>
+Robots may appear inherently inhuman, with mechanical components designed to move through space with precision and speed, therefore they lack the organic movements normal to humans. Our project aimed to bridge this gap by creating a robot that could perform a handshake with a human, turning robotic motion into something organic and human-like. This task is deceptively complex, as it requires a robot to move through it's joint space in a way that is both precise and fluid, while also being able to sense the presence of a human hand and adjust its motion accordingly.
 
 ## Challenges
 
-1. **CV Perception**: The robot must be able to continously sense the presence of a human hand in its workspace, and track the movement of the hand and extract its 3D position in the robot's coordinate frame.
-2. **Path Planning and Motion**: The robot must be able to move its end effector to a desired position in space, whilst also matching the movement of the hand it is tracking. This cannot consist of rotations that would be unnatural in a handshake.
+1. **Computer Vision Perception**: The robot must be able to continously sense the presence of a human hand in its workspace, and track the movement of the hand and extract its 3D position in the robot's coordinate frame. This requires a robust computer vision system that can handle occlusions, lighting changes, and other environmental factors, and must be quick enough to provide real-time tracking of the hand.
+2. **Path Planning and Motion**: The robot must be able to move its end effector to a desired position in space, whilst also matching the movement of the hand it is tracking. This cannot consist of rotations that would be unnatural in a handshake. Therefore, the robot cannot use normal IK solutions as that would result in unnatural movements, and would not result in a human-like handshake.
 
 # Design
 
@@ -76,7 +95,7 @@ We opted for a single RealSense camera with depth information mounted on a tripo
 
 ### Hand Tracking
 
-We chose to track the feature point of the wrist, as it provided a consistent point for tracking the human's motion. If we had more time, we could have used additional points to determine the orientation of the hand as well. We streamed the data of the points at the frame rate of the camera, as more data is generally better and we could figure out how to use it later.
+We chose to track the feature point of the wrist, as it provided a consistent point for tracking the human's motion. If we had more time, we could have used additional points to determine the orientation of the hand as well, however because some of the points on the hand are obscured, we could not have simply used the depth map to compute the 3D points, and would have had to use percieved depth information from Mediapipe in combination with the real depth at a certain point to compute 3D coordinates of 3 points on the hand. We streamed the data of the points at the frame rate of the camera, as we believed having more data would be generally helpful for the trajectory and we could figure out how to use it later.
 
 ### Handshake Procedure
 
@@ -88,26 +107,23 @@ Initially, we tested simple linear path following, but it was too restrictive fo
 
 ### Impact on Real Engineering Applications
 
-These design choices impacted the project's robustness, durability, and efficiency. The single camera setup provided a cost-effective solution but introduced challenges in positioning and orientation accuracy. The wrist tracking method ensured consistent motion tracking but limited the ability to capture hand orientation. The simplified mirroring approach allowed for functional handshakes but lacked orientation data, which could be critical in more complex applications. The path execution improvements, such as joint constraints and Cartesian path planning, enhanced the smoothness and consistency of the robot's movements, making the system more reliable and efficient in real-world scenarios.
+These design choices impacted the project's robustness, durability, and efficiency. The single camera setup provided a cost-effective solution but introduced challenges in positioning and orientation accuracy. The wrist tracking method ensured consistent motion tracking but limited the ability to capture hand orientation. The simplified mirroring approach allowed for functional handshakes but lacked orientation data, which could be critical in more complex applications. The path execution improvements, such as joint constraints and Cartesian path planning, enhanced the smoothness and consistency of the robot's movements, making the system more reliable and efficient in real-world scenarios. However without online path planning, the robot's movements were slower and less responsive, meaning it could not keep up with the human's movements.
 
 # Implementation
 
 ## Hardware
 
-### (a) Describe any hardware you used or built. Illustrate with pictures and diagrams.
-
 We used the following hardware components for our project:
 
-1. **Sawyer Robot by Rethink Robotics**: A versatile and collaborative robot arm.
-2. **Intel RealSense Depth Camera D435**: A depth camera used for tracking the human hand in 3D space.
+1. **Sawyer Robot by Rethink Robotics**: A versatile and collaborative robot arm. [Sawyer Robot by Rethink Robotics](https://robotsguide.com/robots/sawyer)
 
-<div class="row l-page mx-auto">
+2. **Intel RealSense Depth Camera D435**: A depth camera used for tracking the human hand in 3D space. [Intel RealSense Depth Camera D435](https://www.intelrealsense.com/depth-camera-d435/)
+
+<div class="row mx-auto">
   {% include figure.liquid path="assets/img/ee106a/robot_and_camera.png" class="img-fluid rounded z-depth-1" zoomable=true%}
 </div>
 
 ## Parts Used
-
-### (b) What parts did you use to build your solution?
 
 - **Sawyer Robot**: For executing the handshake motion.
 - **Intel RealSense Depth Camera D435**: For capturing the 3D position of the human hand.
@@ -117,8 +133,6 @@ We used the following hardware components for our project:
 ## Software
 
 We began our implementation from Lab 5 and Lab 7 codebases which provided us with functionality for inverse kinematics and QR code detection.
-
-### (c) Describe any software you wrote in detail. Illustrate with diagrams, flow charts, and/or other appropriate visuals.
 
 The software components we developed include:
 
@@ -159,9 +173,11 @@ The software components we developed include:
    - `pose_callback`: Reads in the desired point and adds the point to the waypoints queue if it meets the specified threshold for L2 distance away.
    - Attempts to create a plan using `compute_cartesian_path` with the queue of waypoints (avoid_collision=True), and executes this plan.
 
-## System Workflow
+<div class="row mx-auto">
+  {% include figure.liquid path="assets/img/ee106a/rqt_graph.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+</div>
 
-### (d) How does your complete system work? Describe each step.
+## System Workflow
 
 1. **Start Up**: Start the AR tracking packages and joint action server.
 2. **Calibrate Camera**: Move the RealSense camera with the attached AR tag into the frame of the right arm camera. Run `cam_transform.py` to determine the transform from the camera frame to the robot frame and save the transform as a JSON file.
@@ -184,15 +200,15 @@ Our project was able to successfully track a human hand in 3D space and mirror i
 
 # Conclusion
 
-### (a) Discuss your results. How well did your finished solution meet your design criteria?
+### Results
 
 Our results largely matched our design criteria, except for some minor inaccuracies and latency. As shown in the video, we were able to make the Sawyer robot mirror and track in such a way that it could perform certain kinds of handshakes with a human partner. The movement was somewhat slow due to the time taken to perform real-time path planning. The tracking could also be slightly inaccurate due to human error during camera calibration or if the camera was moved.
 
-### (b) Did you encounter any particular difficulties?
+### Difficulties
 
 We encountered difficulties calibrating the transform from the camera frame to the robot base frame. This was caused by the poor quality of the robot wrist camera, bad lighting, glare from the camera, and interference from other AR markers. We overcame these problems by moving the wrist camera closer, turning off the RealSense camera, and recalibrating until the transform stabilized. We also had issues with the path planning settling on paths that were unnecessarily long or dangerous. We solved this by adding collision boxes to bound the arm’s workspace and by adding joint constraints. Additionally, we used a Cartesian path planner, which planned a path based on a set of waypoints, producing more sensible paths. We also encountered a delay in the robot’s movement due to the time spent on path planning.
 
-### (c) Does your solution have any flaws or hacks? What improvements would you make if you had additional time?
+### Flaws and Hacks
 
 Our method for transforming hand points in the camera frame to the robot base frame is somewhat improvised. Ideally, we would streamline a process where the Sawyer robot automatically computes this transform without the need for an AR marker and manual calibration. To reduce latency caused by path planning, we filtered out points that were close together to lessen the load on the path planner. While effective to some extent, a more robust solution would involve optimizing the path planning process itself to enhance speed. Even with filtering, delays persist, requiring the human partner to move slowly for successful tracking and mirroring. With additional time, we would focus on speeding up path planning and improving the responsiveness of the robot.
 
@@ -202,7 +218,7 @@ Our method for transforming hand points in the camera frame to the robot base fr
 
 1. Saurav Suresh: Senior majoing in Computer Science and Math.
 2. Naman Satish: Senior majoring in Electrical Engineering and Computer Science, with a focus in Computer Vision.
-3. Alexander Lui: Senior majoring in Electrical Engineering and Computer Science.
+3. Alexander Lui: Senior majoring in Computer Science.
 4. Evan Chang: Senior majoring in Electrical Engineering and Computer Science.
 
 ## Contributions
