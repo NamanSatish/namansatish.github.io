@@ -1,8 +1,8 @@
 ---
 layout: distill
 title: Handshake Bot
-description: "Part of C106A : Introduction to Robotics"
-img: assets/img/cs180/projfinal/output/test_images.gif
+description: "Final Project in C106A : Introduction to Robotics"
+img: assets/img/ee106a/working_handshake.gif
 importance: 6
 date: 2024-12-18
 category: school

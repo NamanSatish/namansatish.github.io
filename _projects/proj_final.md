@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: Neural Radiance Fields
-description: "Part of CS180 : Intro to Computer Vision and Computational Photography"
+description: "Final Project in CS180 : Intro to Computer Vision and Computational Photography"
 img: assets/img/cs180/projfinal/output/test_images.gif
 importance: 5
 category: school
