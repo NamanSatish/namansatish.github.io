@@ -6,7 +6,12 @@ img: assets/img/cs180/proj4/output/landscape/tokyo_tower/mosaic_combined.png
 importance: 4
 category: school
 bibliography: empty.bib
+authors:
+  - name: Naman Satish
+    affiliations:
+      name: UC Berkeley
 toc:
+  - name: "Photo Stitching and Mosaics"
   - name: "Photos"
   - name: "Recovering Homography"
   - name: "Warping Images"
@@ -19,9 +24,17 @@ toc:
   - name: "RANSAC"
 ---
 
-# Photos
+In this project, I will be creating photo mosaics by stitching together multiple photos. In this first stage, we must manually define the correspondence points between the images, which will be used to calculate the homography matrix. This matrix will be used to warp the images into the same coordinate system, and then we can blend the images together to create a seamless mosaic. In the second part of the project, we will be using automatic correspondence to detect corner features in images, and then use these features to match images together. We will use RANSAC to find a good homography matrix, and then warp the images together to create a seamless mosaic.
 
-In the process of attaining photos that will be used for photo mosaics, I took a variety of photos of landscapes and landmarks. These photos were taken in different locations, but followed the same principle to keep the lens as fixed as possible and take multiple photos whilst rotating the camera.
+One of my passions is photography and specifically computational photography, and as such, photo stitching is one of my favorite ways to capture a scene. I intended to solve one of my own grievances with the process in an extension to the project. ALthough I had many images I wanted to combine, I had to sort them all together in their own directory and name the resulting mosaic. Instead, I wanted to provide a directory of images that I had taken, and resolve which photos would match together and name them according the content in the pictures. To accomplish this, I used graphs to network a directory of images together and determine multiple mosaic roots, and then used the closeness centrality metric to determine the best root image for each, and used a image captioning model to create multiple named mosaics at once.
+
+# Manual Photo Stitching and Mosaics
+
+In the first section of the project, I collected images that were suitable for photo mosaics from my collection. These photos were taken in different locations, but followed the same principle to keep the lens as fixed as possible and take multiple photos whilst rotating the camera. In this stage, we must manually define the correspondence points between the images, which will be used to calculate the homography matrix. This matrix will be used to warp the images into the same coordinate system, and then we can blend the images together to create a seamless mosaic.
+
+## Photos
+
+I decided to use photos that required photo stitching to present a narrative. These photos were taken such that not all of the subject was in the frame, and the camera was rotated to capture the entire subject. This was done to ensure that the photos could be stitched together to create a seamless mosaic. The first is a photo of Mission San Francisco, the second is a photo of my roommate in our living room playing pong, the third is a photo of the Bay Bridge, and the fourth is a photo of Tokyo Tower.
 
 <div class="row l-page mx-auto">
 {% details **Mission San Francisco** %}
@@ -133,7 +146,7 @@ In the process of attaining photos that will be used for photo mosaics, I took a
 {% enddetails %}
 </div>
 
-# Recovering Homography
+## Recovering Homography
 
 To stitch the photos, we first need to determine the relationship between them. This is done by calculating the homography, a 3x3 matrix that describes the transformation between two images. We compute the homography by using correspondence points between both images, manually (for now) marked locations that are the same between both images. By constructing a system of equations, we can solve for the homography matrix.
 
@@ -152,7 +165,7 @@ To stitch the photos, we first need to determine the relationship between them. 
     </div>
 </div>
 
-Because we are using projective geometry, we will set $$i = 1$$, which enforces consistent scaling, and solve for the remaining 8 unknowns. We can now solve for these 8 unknowns, let us start by expanding the above equation:
+Because we are using projective geometry, we will set $$i = 1$$, which enforces consistent scaling, and solve for the remaining 8 unknowns. To do so, we start by expanding the above equation:
 
 <div class="row l-page mx-auto">
     <div class="col-sm mt-3 mt-md-0">
@@ -215,7 +228,7 @@ Here is an example of what the point correspondences used to calculate the homog
     </div>
 </div>
 
-# Warping Images
+## Warping Images
 
 Homography matrices are useful to warp all the points from one image to another. Going forward, we will refer to images in their own coordinate system, with the origin at the top left corner, as well as the mosaic coordinate system, which is a grid large enough to contain all images in their warped form. The mosaic coordinate system relies on the presence of a root image, which all other images will be warped to. In my implementation, I constructed a graph of where images were connected by their provided correspondence points, and used the closeness centrality metric to determine which image had the smallest distance to all other images. This image was then chosen as the root image.
 
@@ -223,7 +236,7 @@ For each image that would be warped, warp_im, I computed the shortest path to th
 
 Once the homography matrices were computed, I could apply inverse warping from the pixels within the polygon that bounded the warp_im in the mosaic coordinate system, and interpolate the pixel values to fill in the mosaic image.
 
-## Results
+### Results
 
 <div class="row l-page mx-auto">
 {% details **Mission San Francisco** %}
@@ -335,7 +348,7 @@ Once the homography matrices were computed, I could apply inverse warping from t
 {% enddetails %}
 </div>
 
-# Blending
+## Blending
 
 It is a good check to ensure that the images are correctly positioned atop each other at this point. If we simply change the alpha values and combine, we can see that our warping does work.
 
@@ -417,7 +430,7 @@ However, simply overlaying the images will not suffice. We need to blend the ima
 
 By stacking each image's distance transform, and normalizing the values by channel, we can now blend the images together to create a seamless mosaic using the channel-wise values as alpha values in a weighted sum.
 
-## Results
+### Results
 
 <div class="row mx-auto">
     <div class="col-sm mt-3 mt-md-0">
@@ -521,7 +534,9 @@ I took a picture of a fun Pikachu graphic, and I want to use it as my background
 {% enddetails %}
 </div>
 
-# Detecting Corner Features
+# Automatic Correspondence
+
+## Detecting Corner Features
 
 In this section, we computed a Harris matrix for our image, and chose the peaks with a limitation of a growing maximum in a region until we had a reasonable number of peaks. This was necessary to keep our values feasible for vectorization. I found around 45,000 to be the vectorization limit, and about 10,000 was a good compromise between speed and accuracy.
 

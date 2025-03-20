@@ -82,7 +82,7 @@ Robots may appear inherently inhuman, with mechanical components designed to mov
 
 We decided to go with a 4 Module System Architecture:
 
-1. **Hand Tracking**: This module contained our hand tracking algorithim which relied on the MediaPipe's ML model to track the hand in 2D space, and then used the depth information from the RealSense camera to extract the 3D position of the hand in the camera's coordinate frame.
+1. **Hand Tracking**: This module contained our hand tracking algorithm which relied on the MediaPipe's ML model to track the hand in 2D space, and then used the depth information from the RealSense camera to extract the 3D position of the hand in the camera's coordinate frame.
 2. **Hand Transformation**: This module transformed the 3D position of the hand from the camera's coordinate frame to the robot's coordinate frame. This was done using predefined transformation parameters that were calculated using QR codes.
 3. **Handshake Procedure / Mirroring**: This module was responsible for calculating the desired position of the robot's end effector based on the 3D position of the hand. By reading a predefined trajectory, the published position of the robot's end effector could be updated throughout the handshake procedure.
 4. **Path Execution**: This module was responsible for executing the path calculated by the Handshake Procedure module. It construct trajectories based on a collection of waypoints and then executed the trajectory using the MoveIt! library.
