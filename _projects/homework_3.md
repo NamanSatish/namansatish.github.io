@@ -943,6 +943,7 @@ Now we can compare the effect of Russian Roulette on the quality of the rendered
         <div class="col">
             {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/hw3/part4_bunny_m2_rr.png" alt="Russian Roulette of Bunny Scene with 2 Max Depth" %}
         <div class="caption">2 Max Depth</div>
+        </div>
     </div>
     <div class="row align-items-center text-center">
         <div class="col">
