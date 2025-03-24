@@ -5,7 +5,6 @@ description: "Part of CS184 : Foundations of Computer Graphics"
 img: assets/img/cs184/hw3/CBdragon_screenshot_3-20_5-5-4.png
 importance: 9
 category: school
-pseudocode: true
 bibliography: empty.bib
 toc:
   - name: "Overview"
@@ -15,40 +14,6 @@ toc:
   - name: "Global Illumination"
   - name: "Adaptive Sampling"
 ---
-
-<!--
-
-Overview (3 pts)
-Give a high-level overview of what you have implemented in this assignment. Think about what you have built as a whole. Share your thoughts on what interesting things you have learned from completing this assignment.
-
-Part 1 (20 pts)
-Walk through the ray generation and primitive intersection parts of the rendering pipeline.
-Explain the triangle intersection algorithm you implemented in your own words.
-Show images with normal shading for a few small .dae files.
-Part 2 (17 pts)
-Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.
-Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.
-Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.
-Part 3 (20 pts)
-Walk through both implementations of the direct lighting function.
-Show some images rendered with both implementations of the direct lighting function.
-Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.
-Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
-Part 4 (25 pts)
-Walk through your implementation of the indirect lighting function.
-Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
-Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.)
-For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.
-Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.
-For CBbunny.dae, output the Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.
-Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
-You will probably want to use the instructional machines for the above renders in order to not burn up your own computer for hours.
-Part 5 (15 pts)
-Explain adaptive sampling. Walk through your implementation of the adaptive sampling.
-Pick two scenes and render them with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth.
--->
-
-https://satish.dev/projects/homework_3
 
 # Overview
 
@@ -88,7 +53,7 @@ The input `(x, y)` represents normalized image coordinates where:
 - `(0,0)` maps to the bottom-left corner of the sensor
 - `(1,1)` maps to the top-right corner
 
-Using linear interpolation, the corresponding sensor space coordinates $$(X_s, Y_s, -1)$$ are computed as:
+Using linear interpolation, the corresponding sensor space coordinates $$ (X_s, Y_s, -1) $$ are computed as:
 
 $$
 X_s = (2x - 1) \tan\left(\frac{hFov}{2}\right)
@@ -138,7 +103,7 @@ We can now construct multiple rays for a given pixel by sampling uniformly withi
 
 $$\mathbf{offset} =  \left( [0,1], [0,1] \right)$$
 
-$$\mathbf{r}_i = \text{generate_ray}(x + \mathbf{offset}_x, y + \mathbf{offset}_y)$$
+$$\mathbf{r}_i = \text{generate_ray}(x + \mathbf{offset}\_x, y + \mathbf{offset}\_y)$$
 
 $$
 \mathbf{radiance} = \frac{1}{\text{ns_aa}} \sum_{i=1}^{\text{ns_aa}} \text{est}(\mathbf{r}_i)
@@ -493,136 +458,6 @@ As we increase the number of samples for each source light ray in our importance
 ...
 ```
 
-<!--
-Left Column: Uniform Hemisphere Sampling
-./pathtracer -t 8 -s 8 -l 4 -m 6 -H -f part3_bunny_uniform_s8_l4.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 16 -l 8 -m 6 -H -f part3_bunny_uniform_s16_l8.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 32 -l 16 -m 6 -H -f part3_bunny_uniform_s32_l16.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f part3_bunny_uniform_s64_l32.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 128 -l 64 -m 6 -H -f part3_bunny_uniform_s128_l64.png -r 480 360 ../dae/sky/CBbunny.dae
-
-Right Column: Importance Sampling
-./pathtracer -t 8 -s 8 -l 4 -m 6 -f part3_bunny_importance_s8_l4.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 16 -l 8 -m 6 -f part3_bunny_importance_s16_l8.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 32 -l 16 -m 6 -f part3_bunny_importance_s32_l16.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 64 -l 32 -m 6 -f part3_bunny_importance_s64_l32.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 128 -l 64 -m 6 -f part3_bunny_importance_s128_l64.png -r 480 360 ../dae/sky/CBbunny.dae
--->
-
-<!--
-Table
-./pathtracer -t 8 -s 8 -l 4 -m 6 -H -f part3_bunny_uniform_s8_l4.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 16 -l 8 -m 6 -H -f part3_bunny_uniform_s16_l8.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 32 -l 16 -m 6 -H -f part3_bunny_uniform_s32_l16.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f part3_bunny_uniform_s64_l32.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 128 -l 64 -m 6 -H -f part3_bunny_uniform_s128_l64.png -r 480 360 ../dae/sky/CBbunny.dae
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0021 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0163 sec)
-[PathTracer] Rendering... 100%! (0.6797s)
-[PathTracer] BVH traced 2381960 rays.
-[PathTracer] Average speed 3.5043 million rays per second.
-[PathTracer] Averaged 5.694668 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_uniform_s8_l4.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0019 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0160 sec)
-[PathTracer] Rendering... 100%! (3.3095s)
-[PathTracer] BVH traced 11225397 rays.
-[PathTracer] Average speed 3.3919 million rays per second.
-[PathTracer] Averaged 4.524495 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_uniform_s16_l8.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0017 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0157 sec)
-[PathTracer] Rendering... 100%! (13.7694s)
-[PathTracer] BVH traced 50020822 rays.
-[PathTracer] Average speed 3.6328 million rays per second.
-[PathTracer] Averaged 4.723333 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_uniform_s32_l16.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0014 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0180 sec)
-[PathTracer] Rendering... 100%! (60.0449s)
-[PathTracer] BVH traced 215498146 rays.
-[PathTracer] Average speed 3.5890 million rays per second.
-[PathTracer] Averaged 4.328195 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_uniform_s64_l32.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0017 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0161 sec)
-[PathTracer] Rendering... 100%! (231.3099s)
-[PathTracer] BVH traced 826760248 rays.
-[PathTracer] Average speed 3.5743 million rays per second.
-[PathTracer] Averaged 4.741953 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_uniform_s128_l64.png... Done!
-[PathTracer] Job completed.
-
-./pathtracer -t 8 -s 8 -l 4 -m 6 -f part3_bunny_importance_s8_l4.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 16 -l 8 -m 6 -f part3_bunny_importance_s16_l8.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 32 -l 16 -m 6 -f part3_bunny_importance_s32_l16.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 64 -l 32 -m 6 -f part3_bunny_importance_s64_l32.png -r 480 360 ../dae/sky/CBbunny.dae
-./pathtracer -t 8 -s 128 -l 64 -m 6 -f part3_bunny_importance_s128_l64.png -r 480 360 ../dae/sky/CBbunny.dae
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0014 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0157 sec)
-[PathTracer] Rendering... 100%! (0.7308s)
-[PathTracer] BVH traced 2699377 rays.
-[PathTracer] Average speed 3.6935 million rays per second.
-[PathTracer] Averaged 8.126185 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_importance_s8_l4.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0014 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0246 sec)
-[PathTracer] Rendering... 100%! (2.6805s)
-[PathTracer] BVH traced 9549950 rays.
-[PathTracer] Average speed 3.5627 million rays per second.
-[PathTracer] Averaged 8.499365 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_importance_s16_l8.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0024 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0206 sec)
-[PathTracer] Rendering... 100%! (9.8483s)
-[PathTracer] BVH traced 34649617 rays.
-[PathTracer] Average speed 3.5183 million rays per second.
-[PathTracer] Averaged 9.024456 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_importance_s32_l16.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0017 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0162 sec)
-[PathTracer] Rendering... 100%! (46.6251s)
-[PathTracer] BVH traced 123140709 rays.
-[PathTracer] Average speed 2.6411 million rays per second.
-[PathTracer] Averaged 9.676516 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_importance_s64_l32.png... Done!
-[PathTracer] Job completed.
-[PathTracer] Input scene file: ../dae/sky/CBbunny.dae
-[PathTracer] Rendering using 8 threads
-[PathTracer] Collecting primitives... Done! (0.0016 sec)
-[PathTracer] Building BVH from 28588 primitives... BVH Depth: 18; Done! (0.0160 sec)
-[PathTracer] Rendering... 100%! (175.9478s)
-[PathTracer] BVH traced 504070638 rays.
-[PathTracer] Average speed 2.8649 million rays per second.
-[PathTracer] Averaged 9.244467 intersection tests per ray.
-[PathTracer] Saving to file: part3_bunny_importance_s128_l64.png... Done!
-[PathTracer] Job completed.
--->
 <div class="container l-page">
     <div class="row text-center fw-bold">
         <div class="col-sm"># Samples per Pixel / Samples per Source Light</div>
@@ -705,60 +540,6 @@ In this section, we complete the function `PathTracer::at_least_one_bounce_radia
 3. If this ray intersects with an object in the scene, we recursively call `at_least_one_bounce_radiance` with the new ray and decrement the depth.
 4. If isAccumBounces is true, we accumulate the radiance from one-bounce at our hit point with the radiance from the recursive call.
 5. We return the radiance at the hit point.
-
-<!--
-
-Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
-
-Indirect
-./pathtracer -t 8 -s 1024 -m 32 -f part4_bunny_indirect.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 32 -f part4_dragon_indirect.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 1024 -m 32 -f part4_lucy_indirect.png -r 480 360 ../dae/sky/CBlucy.dae &
-./pathtracer -t 8 -s 1024 -m 32 -f part4_spheres_indirect.png -r 480 360 ../dae/sky/CBspheres_lambertian.dae &
-
-Direct: Modify the function PathTracer::est_radiance_global_illumination to only use zero and one bounce radiance.
-./pathtracer -t 8 -s 1024 -f part4_bunny_direct.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -f part4_dragon_direct.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 1024 -f part4_lucy_direct.png -r 480 360 ../dae/sky/CBlucy.dae &
-./pathtracer -t 8 -s 1024 -f part4_spheres_direct.png -r 480 360 ../dae/sky/CBspheres_lambertian.dae &
-
-Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.): Modified the function to not add one_bounce_radiance on first bounce.
-./pathtracer -t 8 -s 1024 -m 6 -f part4_dragon_indirect_nozero.png -r 480 360 ../dae/sky/CBdragon.dae
-
-For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.
-Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.
-./pathtracer -t 8 -s 1024 -m 0 -f part4_bunny_m0.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 1 -f part4_bunny_m1.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 2 -f part4_bunny_m2.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 3 -f part4_bunny_m3.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 4 -f part4_bunny_m4.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 5 -f part4_bunny_m5.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 0 -o 0 -f part4_bunny_m0_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 1 -o 0 -f part4_bunny_m1_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 2 -o 0 -f part4_bunny_m2_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 3 -o 0 -f part4_bunny_m3_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 4 -o 0 -f part4_bunny_m4_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 5 -o 0 -f part4_bunny_m5_noaccum.png -r 480 360 ../dae/sky/CBbunny.dae &
-
-For CBbunny.dae, output the Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel. : 35% term
-./pathtracer -t 8 -s 1024 -m 0 -f part4_bunny_m0_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 1 -f part4_bunny_m1_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 2 -f part4_bunny_m2_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 3 -f part4_bunny_m3_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 4 -f part4_bunny_m4_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-./pathtracer -t 8 -s 1024 -m 100 -f part4_bunny_m100_rr.png -r 480 360 ../dae/sky/CBbunny.dae &
-
-Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
-./pathtracer -t 8 -s 1 -l 4 -m 6 -f part4_dragon_s1_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 2 -l 4 -m 6 -f part4_dragon_s2_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 4 -l 4 -m 6 -f part4_dragon_s4_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 8 -l 4 -m 6 -f part4_dragon_s8_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 16 -l 4 -m 6 -f part4_dragon_s16_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 64 -l 4 -m 6 -f part4_dragon_s64_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 256 -l 4 -m 6 -f part4_dragon_s256_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-./pathtracer -t 8 -s 1024 -l 4 -m 6 -f part4_dragon_s1024_l4.png -r 480 360 ../dae/sky/CBdragon.dae &
-
--->
 
 ### Task 3
 
@@ -961,7 +742,7 @@ Now we can compare the effect of Russian Roulette on the quality of the rendered
     </div>
 </div>
 
-We can see that the Russian Roulette from 1 to 4 bounces offers a significant improvement in the quality of the image, as we have a larger range of path lengths we sample from. However, the Russian Roulette with 100 bounces does not offer a significant improvement in the quality of the image, as we do not even likely reach the maximum depth of 100 bounces. This is because the probability of a ray reaching depth $d$ is $(1 - p_{term})^d$, where $p_{term}$ is the probability of termination, which is 0.35 in our case. This means that the probability of a ray reaching depth 100 is $1.95585054 \times 10^{-19}$, which is very low.
+We can see that the Russian Roulette from 1 to 4 bounces offers a significant improvement in the quality of the image, as we have a larger range of path lengths we sample from. However, the Russian Roulette with 100 bounces does not offer a significant improvement in the quality of the image, as we do not even likely reach the maximum depth of 100 bounces. This is because the probability of a ray reaching depth $$ d $$ is $$ (1 - p*{term})^d $$, where $$ p*{term} $$ is the probability of termination, which is 0.35 in our case. This means that the probability of a ray reaching depth 100 is $$ 1.95585054 \times 10^{-19} $$, which is very low.
 
 Finally, we will compare the effect of the number of samples per pixel on the quality of the rendered image. We will render the dragon scene with 4 light rays and compare the rendered views with various sample-per-pixel rates: 1, 2, 4, 8, 16, 64, 256, and 1024.
 
@@ -1014,7 +795,7 @@ It is quite computationally expensive to have 1024 samples across the entire sce
 
 ### Task 1
 
-We will go back to our `PathTracer::raytrace_pixel` function to implement adaptive sampling. We will begin by initializing variables to keep track of the current number of ray samples per pixel, the sum of illuminance received from every ray sample, and the sum of the illuminance squared received from every ray sample. As we loop through the number of samples per pixel, as before, we will calculate the radiance at the pixel for each sample and add it's contribution onto a running sum. Then for each ray sample, we will add to our two running luminance sums, and when we have reached our batch size, we will calculate the mean, $\mu$, and the variance, $\sigma^2$, of the luminance samples. We will then calculate the confidence interval, $I$, of the luminance samples, which is given by $I = 1.96 \times \frac{\sigma}{\sqrt{N}}$, where $N$ is the number of samples. If the confidence interval is less than ${tol} \times \mu$, we will break out of the loop and return the mean of the radiance sum. If the confidence interval is greater than ${tol} \times \mu$, we will continue to take samples until we reach the maximum number of samples per pixel.
+We will go back to our `PathTracer::raytrace_pixel` function to implement adaptive sampling. We will begin by initializing variables to keep track of the current number of ray samples per pixel, the sum of illuminance received from every ray sample, and the sum of the illuminance squared received from every ray sample. As we loop through the number of samples per pixel, as before, we will calculate the radiance at the pixel for each sample and add it's contribution onto a running sum. Then for each ray sample, we will add to our two running luminance sums, and when we have reached our batch size, we will calculate the mean, $$ \mu $$, and the variance, $$ \sigma^2 $$, of the luminance samples. We will then calculate the confidence interval, $$ I $$, of the luminance samples, which is given by $$ I = 1.96 \times \frac{\sigma}{\sqrt{N}} $$, where $ N $ is the number of samples. If the confidence interval is less than $$ {tol} \times \mu $$, we will break out of the loop and return the mean of the radiance sum. If the confidence interval is greater than $$ {tol} \times \mu $$, we will continue to take samples until we reach the maximum number of samples per pixel.
 
 ### Results
 
