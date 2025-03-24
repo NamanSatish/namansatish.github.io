@@ -11,18 +11,14 @@ authors:
     affiliations:
       name: UC Berkeley
 toc:
-  - name: "Photo Stitching and Mosaics"
-  - name: "Photos"
-  - name: "Recovering Homography"
-  - name: "Warping Images"
-  - name: "Blending"
-  - name: "Rectification"
-  - name: "Detecting Corner features"
-  - name: "ANMS"
-  - name: "Corner Features"
-  - name: "Matches"
-  - name: "RANSAC"
+  - name: Introduction
+  - name: Manual Photo Stitching and Mosaics
+  - name: Rectification
+  - name: Automatic Correspondence
+  - name: Automatic End to End
 ---
+
+# Introduction
 
 In this project, I will be creating photo mosaics by stitching together multiple photos. In this first stage, we must manually define the correspondence points between the images, which will be used to calculate the homography matrix. This matrix will be used to warp the images into the same coordinate system, and then we can blend the images together to create a seamless mosaic. In the second part of the project, we will be using automatic correspondence to detect corner features in images, and then use these features to match images together. We will use RANSAC to find a good homography matrix, and then warp the images together to create a seamless mosaic.
 
@@ -232,7 +228,9 @@ Here is an example of what the point correspondences used to calculate the homog
 
 Homography matrices are useful to warp all the points from one image to another. Going forward, we will refer to images in their own coordinate system, with the origin at the top left corner, as well as the mosaic coordinate system, which is a grid large enough to contain all images in their warped form. The mosaic coordinate system relies on the presence of a root image, which all other images will be warped to. In my implementation, I constructed a graph of where images were connected by their provided correspondence points, and used the closeness centrality metric to determine which image had the smallest distance to all other images. This image was then chosen as the root image.
 
-For each image that would be warped, warp_im, I computed the shortest path to the root image, root_im. Then by traversing from warp_im to root_im, I could construct a homography matrix that would warp from warp_im to the intermediary nodes, and finally to root_im.
+For each image that would be warped, warp_im, I computed the shortest path to the root image, root_im. Then by traversing from warp_im to root_im, I could construct a homography matrix that would warp from warp_im, through the intermediary nodes, to root_im.
+
+In the manual case, I was able to make decisions through the correspondences I provided on how images should warp to each other, for example avoiding warping through images that had little overlap, I would not have the benefit of this in the automatic case.
 
 Once the homography matrices were computed, I could apply inverse warping from the pixels within the polygon that bounded the warp_im in the mosaic coordinate system, and interpolate the pixel values to fill in the mosaic image.
 
@@ -350,7 +348,7 @@ Once the homography matrices were computed, I could apply inverse warping from t
 
 ## Blending
 
-It is a good check to ensure that the images are correctly positioned atop each other at this point. If we simply change the alpha values and combine, we can see that our warping does work.
+Now that we can warp all images into a shared coordinate space, it is a good check to ensure that the images are correctly positioned atop each other at this point. If we simply change the alpha values and stack combine our images which live in a multi-dimension numpy array, we can see that our warping does work.
 
 <div class="row mx-auto">
     <div class="col-sm mt-3 mt-md-0">
@@ -360,7 +358,8 @@ It is a good check to ensure that the images are correctly positioned atop each 
         </div>
     </div>
 </div>
-However, simply overlaying the images will not suffice. We need to blend the images together to create a seamless mosaic. To do this, we can use a simple linear blending technique. We can calculate the alpha value for each pixel in the mosaic image by taking the distance from the center of the image and dividing by the maximum distance from the center. This will create a gradient that we can use to blend the images together.
+
+However, it is clear that simply overlaying the images will not suffice to create a mosaic. We need to blend the images together to create a seamless mosaic. To do this, we can use a simple linear blending technique. We can calculate the alpha value for each pixel in the mosaic image by taking the distance from the center of the image and dividing by the maximum distance from the center. This will create a gradient that we can use to blend the images together.
 
 <div class="row l-page mx-auto">
 {% details **Mission San Francisco** %}
@@ -428,7 +427,15 @@ However, simply overlaying the images will not suffice. We need to blend the ima
 {% enddetails %}
 </div>
 
-By stacking each image's distance transform, and normalizing the values by channel, we can now blend the images together to create a seamless mosaic using the channel-wise values as alpha values in a weighted sum.
+I was able to greatly speed up this next step through the use of numpy vectorization, I started by stacking each image's distance transform, and normalizing the values by channel (image-wise), this value would be interpreted as alpha values for the contribution of each image's pixel in a weighted sum.
+
+<!-- For all i,j : alpha_channel = d_tr[i,j,:] - min(d_tr[i,j,:]) / max(d_tr[i,j,:]) - min(d_tr[i,j,:]) -->
+
+$$ \text{alpha} = \frac{\text{d_tr} - \text{min}(\text{d_tr})}{\text{max}(\text{d_tr}) - \text{min}(\text{d_tr})} $$
+
+Then, we could perform a channel-wise weighted sum across both matrices to get the final mosaic image.
+
+$$ \text{mosaic} = \sum\_{i=1}^{n} \text{image}\_i \times \text{alpha}\_i $$
 
 ### Results
 
@@ -534,11 +541,15 @@ I took a picture of a fun Pikachu graphic, and I want to use it as my background
 {% enddetails %}
 </div>
 
+Now I can use this as my background without having to worry about the image not being straight!
+
 # Automatic Correspondence
+
+While manual correspondence is useful for small datasets, it is very time-consuming for larger datasets. In this section, we will explore how to automatically find correspondence points between images through Harris feature/corner detection, using the ANMS algorithm to select the best corners, making corner descriptors, and using these descriptors to find correspondence points between the images.
 
 ## Detecting Corner Features
 
-In this section, we computed a Harris matrix for our image, and chose the peaks with a limitation of a growing maximum in a region until we had a reasonable number of peaks. This was necessary to keep our values feasible for vectorization. I found around 45,000 to be the vectorization limit, and about 10,000 was a good compromise between speed and accuracy.
+In this section, I started by computing a Harris matrix for our image, and chose the peaks with a limitation of a growing maximum in a region until we had a reasonable number of peaks. This was necessary to keep our values feasible for vectorization. I found around 45,000 to be the vectorization limit, and about 10,000 was a good compromise between speed and accuracy.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -551,10 +562,11 @@ In this section, we computed a Harris matrix for our image, and chose the peaks 
     </div>
 </div>
 
-# ANMS
+## ANMS
 
-We then used the ANMS algorithm to select the best corners. This was done by computing the minimum radius before suppression and keeping the top `n` with the highest radius.
-There is an optional robustness variable that helps limit suppression, where a value of 1 enforces separation between points but loses some strong corners.
+We then used the ANMS, Adaptive Non-Maximal Suppression, algorithm to select the best corners. This function takes in our Harris matrix and list of peaks, and returns our top `n` corners. We start by computing a distance matrix between all peaks, I found that `cdist` from `scipy` was the fastest way to do this. I then extracted our top `n` harris values, and did a comparison between all elements with a `robustness` factor to determine if they should be suppressed by a stronger corner, this will be our robustness matrix. Next we mask our distance matrix using the robustness matrix, if the corner is sufficiently strong against another corner, we will keep it for consideration, otherwise we will suppress it right now by setting the distance to our image's maximum distance. Now we can extract the minimum radius for each corner before it encounters a stronger corner, and keep the top `n` corners with the highest radius.
+
+The robustness variable ultimately helps limit suppression, where a value of 1 enforces strict separation between points but loses some strong corners because they might be too close to each other. I was able to settle on a value of 0.9, which allowed for some overlap between points, but ensures that the strongest corners are kept.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -567,9 +579,9 @@ There is an optional robustness variable that helps limit suppression, where a v
     </div>
 </div>
 
-# Corner Features
+## Corner Features
 
-Now we can sample a 40x40 region around corners and downsample to 8x8 to get a descriptor for each corner. We assume the images are already axis-aligned.
+We cannot compare our corner features between images in a 1-1 comparison because of aliasing that may cause the underlying pixels to be slightly different. Therefore, we can sample a 40x40 region around corners and downsample to 8x8 to get a descriptor for each corner. This makes the assumption that our images are already axis-aligned.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -582,7 +594,7 @@ Now we can sample a 40x40 region around corners and downsample to 8x8 to get a d
     </div>
 </div>
 
-Here are the descriptors after normalizing and standardizing the values, making them more robust to lighting changes and other factors.
+Next we normalize and standardize the pixel values of our descriptors, making them more robust to lighting changes and other factors.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -595,9 +607,9 @@ Here are the descriptors after normalizing and standardizing the values, making 
     </div>
 </div>
 
-# Matches
+## Matches
 
-We compute the difference between how well a descriptor matches to its closest match and its second-closest match. This helps determine if a match is good, filtering out bad matches.
+Finally, when we compare the similarity between corners in two images, it is difficult to know whether there is a good agreement between the corners or if they simply match with many corners, therefore a good metric that helps us is the difference between a descriptor' closest match and its second-closest match. If they are very close, the descriptor will not be helpful as it could have easily been another corner match. This helps determine if a match is good, filtering out bad matches.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -606,9 +618,9 @@ We compute the difference between how well a descriptor matches to its closest m
     </div>
 </div>
 
-# RANSAC
+## RANSAC
 
-Finally, we use RANSAC to find a good homography matrix, which allows us to warp the images together and blend them into a seamless mosaic.
+Now that we have our corners, we want to find the homography matrix that best describes the relationship between the two images. However, we have many corners, and some of them may be outliers. To find the best homography matrix, we can use RANSAC, Random Sample Consensus, to iteratively find the best homography matrix. We start by randomly selecting 4 corners from our matches, and computing the homography matrix. We then find the number of inliers, corners that are within a certain threshold of the homography matrix, and keep the homography matrix with the most inliers. We repeat this process for a set number of iterations, and the homography matrix with the most inliers is our best homography matrix. This process is robust to outliers, as the probability of continously selecting all outliers is very low.
 
 <div class="row l-page">
     <div class="col-sm mt-3 mt-md-0">
@@ -643,4 +655,334 @@ Finally, we use RANSAC to find a good homography matrix, which allows us to warp
     </div>
 </div>
 
-The coolest thing I learned in this project was definitely the rectification process. It was fascinating to see how a skewed image of a document could be rectified to make it legible—something useful in many applications!
+In my original automatic correspondence implementation, I limited my mosaics to size 2 as I didn't have time to implement traversal across my graph network, however I returned to this feature in my next section.
+
+# Automatic End to End
+
+In this extension, I wanted to automate the entire process of stitching images together. I began by changing the input to my program to be a directory of many images. I wanted my program to be able to determine which images should go together, and which were seperate. I additionally wanted them to be automatically named and outputted as mosaics.
+
+## Matching
+
+With $n$ images, we need to determine which images should be stitched together. While there is likely a way to do this that is not $n^2$, I found that the time complexity was not a concern for the number of images I was working with. I started by computing the matches between all images, as described in the previous section. However, I found that only if the number of matches exceeded 6 should the images be considered for stitching. This was because some images contained few generic enough features that they could be matched with many other images, and this was not a good indicator of a good match. I wanted to determine a better metric for grouping images together, such as distance to group roots, but I could not find a good way to implement this, and my hard-coded solution was sufficiently working.
+
+<div class='container'>
+<!-- Embed the file assets/html/h_relations_graph_vacation.html -->
+    <iframe src="/assets/html/matches_visualization_vacation.html" width="100%" height="600px"></iframe>
+    <div class="caption">Matches Graph for Vacation Images</div>
+</div>
+
+<div class='container'>
+<!-- Embed the file assets/html/h_relations_graph_vacation.html -->
+    <iframe src="/assets/html/matches_visualization_stress_test.html" width="100%" height="600px"></iframe>
+    <div class="caption">Matches Graph for Stress Test Images</div>
+</div>
+
+## Homography Network
+
+```python
+#Compute number of samples to get 99% confidence
+confidence = 0.99
+match_confidence = 0.1
+prob_4_correct = (match_confidence) ** 4
+num_samples = int(np.log(1 - confidence) / np.log(1 - prob_4_correct))
+#Number of samples for 95% confidence: 46049
+```
+
+I originally computed the number of samples needed for 99% confidence between two images, but this was too when running on a large group of images. I likely assumed the chance for a correct match was too low, but experimentally I found 10000 samples to be sufficient to get a good homography matrix. However, because of the large number of ways an image could now traverse our homography graph to get to the root, I needed a better way to quantify the quality of the homography matrix than just the number of inliers.
+
+```python
+homography_matrix, inliers = ransac_homography(matches, self.corners[image_path1], self.corners[image_path2], threshold=2.0, max_iterations=10000)
+real_inliers = len(inliers) - 4
+real_challengers = len(matches) - 4
+quality = (real_inliers / real_challengers) * (1 - np.e ** (-real_challengers / 20))
+```
+
+I used the real inliers versus the number of challengers to determine the quality of the homography matrix. However, I found that a simple ratio was not enough, consider the case in which there are only a few real challengers, 10, and the homography matrix could easily be considered perfect even if these 10 managed to be within bounds, or close with 9. Alternatively, having 200 real challengers and sufficiently matching 180~190 of them is much more challenging, and therefore a sign of a better homography matrix. To mathematically represent this, I used the exponential decay to penalize the homography matrix for not having enough real challengers, and multiplied this by the ratio of real inliers to real challengers to get a quality metric. With our quality metric being bounded between 0 and 1, we can simply subtract 1 from it to obtain an error metric, and minimize the error throughout our traversal. While I implemented a cummulative error metric, it is likely that a compounding error metric would have been more effective in an intensive traversal due to the compounding nature of errors.
+
+<div class='container'>
+<!-- Embed the file assets/html/h_relations_graph_vacation.html -->
+    <iframe src="/assets/html/homography_relations_graph_vacation.html" width="100%" height="600px"></iframe>
+    <div class="caption">Homography Graph for Vacation Images</div>
+</div>
+
+<div class='container'>
+<!-- Embed the file assets/html/h_relations_graph_vacation.html -->
+    <iframe src="/assets/html/homography_relations_graph_stress_test.html" width="100%" height="600px"></iframe>
+    <div class="caption">Homography Graph for Stress Test Images</div>
+</div>
+
+## Naming
+
+With our images grouped and formed into mosaics, it became a challenge on how to output them. While I could have chosen to use the name of the root image, I wanted to give them a better name. To do so, I used `Salesforce/blip-image-captioning-large` to generate captions, however these were not quite good enough to directly use as names, so I developed a filter to remove words from the generated captions.
+
+I then tested my naming algorithm on a few images:
+
+<div class='container'>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_3670.jpg" alt="Image 1" %}
+            <div class="caption">Image 1</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_3698.jpg" alt="Image 2" %}
+            <div class="caption">Image 2</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_3922.jpg" alt="Image 3" %}
+            <div class="caption">Image 3</div>
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_3966.jpg" alt="Image 4" %}
+            <div class="caption">Image 4</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_3989.jpg" alt="Image 5" %}
+            <div class="caption">Image 5</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_4263.jpg" alt="Image 6" %}
+            <div class="caption">Image 6</div>
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_4264.jpg" alt="Image 7" %}
+            <div class="caption">Image 7</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_4266.jpg" alt="Image 8" %}
+            <div class="caption">Image 8</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/caption_training/IMG_4306.jpg" alt="Image 9" %}
+            <div class="caption">Image 9</div>
+        </div>
+    </div>
+</div>
+
+See if you can guess which caption corresponds to which image!
+
+```text
+Original caption: a panoramic image of a busy city street with fireworks in the sky
+Cleaned caption: busy city street with fireworks in the sky
+Original caption: a panoramic image of a very tall building with a clock on it
+Cleaned caption: tall building with a clock on it
+Original caption: a panoramic image of a busy city street with fireworks in the sky
+Cleaned caption: busy city street with fireworks in the sky
+Original caption: a panoramic image of a busy city street at night with fireworks
+Cleaned caption: busy city street at night with fireworks
+Original caption: a panoramic image of a wall full of beer bottles
+Cleaned caption: wall full of beer bottles
+Original caption: a panoramic image of a rainbow painted street in a city
+Cleaned caption: rainbow painted street in a city
+Original caption: a panoramic image of a stadium lit up at night
+Cleaned caption: stadium lit up at night
+Original caption: a panoramic image of an aerial view of a city and a lake
+Cleaned caption: aerial view of a city and a lake
+Original caption: a panoramic image of a group of people posing for a picture
+Cleaned caption: group of people posing for a picture
+```
+
+## Results
+
+Starting first with a small dataset of 27 images, I was able to successfully stitch together the images into 5 mosaics.
+
+<div class="container l-page mx-auto">
+{% details **Vacation Directory** %}
+<div class="container l-page mx-auto">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1810.jpg" alt="Vacation Image 1" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1812.jpg" alt="Vacation Image 2" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1815.jpg" alt="Vacation Image 3" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1816.jpg" alt="Vacation Image 4" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1817.jpg" alt="Vacation Image 5" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1819.jpg" alt="Vacation Image 6" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1908.jpg" alt="Vacation Image 7" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1909.jpg" alt="Vacation Image 8" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1915.jpg" alt="Vacation Image 9" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1916.jpg" alt="Vacation Image 10" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1918.jpg" alt="Vacation Image 11" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1919.jpg" alt="Vacation Image 12" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1920.jpg" alt="Vacation Image 13" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1921.jpg" alt="Vacation Image 14" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1926.jpg" alt="Vacation Image 15" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1927.jpg" alt="Vacation Image 16" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1928.jpg" alt="Vacation Image 17" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_1929.jpg" alt="Vacation Image 18" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2169.jpg" alt="Vacation Image 19" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2379.jpg" alt="Vacation Image 20" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2380.jpg" alt="Vacation Image 21" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2381.jpg" alt="Vacation Image 22" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2382.jpg" alt="Vacation Image 23" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2383.jpg" alt="Vacation Image 24" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2384.jpg" alt="Vacation Image 25" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2385.jpg" alt="Vacation Image 26" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/vacation/IMG_2386.jpg" alt="Vacation Image 27" %}
+        </div>
+    </div>
+</div>
+{% enddetails %}
+</div>
+
+<div class="container l-page mx-auto">
+{% details **Vacation Output** %}
+<div class="container l-page mx-auto">
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/vacation_mosaic/city_with_tall_buildings_in_the_background.png" alt="City with Tall Buildings in the Background" %}
+        <div class="caption">City with Tall Buildings in the Background</div>
+    </div>
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/vacation_mosaic/city_at_night_with_the_eiffel_tower.png" alt="City at Night with the Eiffel Tower" %}
+        <div class="caption">City at Night with the Eiffel('Tokyo') Tower</div>
+    </div>
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/vacation_mosaic/city_street_with_tall_buildings_and_trees.png" alt="City Street with Tall Buildings and Trees" %}
+        <div class="caption">City Street with Tall Buildings and Trees</div>
+    </div>
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/vacation_mosaic/city_from_a_hill.png" alt="City from a Hill" %}
+        <div class="caption">City from a Hill</div>
+    </div>
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/vacation_mosaic/river_with_buildings_in_the_background.png" alt="River with Buildings in the Background" %}
+        <div class="caption">River with Buildings in the Background</div>
+    </div>
+</div>
+{% enddetails %}
+
+I then moved on to a more challenging dataset of 14 images that were all part of one mosaic and tested the program on this dataset. These photos were taken at the top of the Fushimi Inari Shrine in Kyoto, Japan. Using Adobe Photoshop to stitch the images together took over 30 minutes, so I was glad to see that my program was able to stitch the images in a shorter amount of time.
+
+<div class="container l-page mx-auto">
+{% details **Stress Test Directory** %}
+<div class="container l-page mx-auto">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2370.jpg" alt="Stress Test Image 1" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2371.jpg" alt="Stress Test Image 2" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2373.jpg" alt="Stress Test Image 3" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2374.jpg" alt="Stress Test Image 4" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2375.jpg" alt="Stress Test Image 5" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2378.jpg" alt="Stress Test Image 6" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2379.jpg" alt="Stress Test Image 7" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2380.jpg" alt="Stress Test Image 8" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2381.jpg" alt="Stress Test Image 9" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2382.jpg" alt="Stress Test Image 10" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2383.jpg" alt="Stress Test Image 11" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2384.jpg" alt="Stress Test Image 12" %}
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2385.jpg" alt="Stress Test Image 13" %}
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/input/landscape/stress_test/IMG_2386.jpg" alt="Stress Test Image 14" %}
+        </div>
+    </div>
+</div>
+{% enddetails %}
+</div>
+
+<div class="container l-page mx-auto">
+{% details **Stress Test Output** %}
+<div class="container l-page mx-auto">
+    <div class="row align-items-center text-center">
+        {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs180/proj4/output/auto/stress_test/sunset_over_a_city_and_mountains.png" alt="Stress Test Image 1" %}
+        <div class="caption">Sunset over a City and Mountains</div>
+    </div>
+</div>
+{% enddetails %}
+</div>
