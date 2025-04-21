@@ -47,7 +47,11 @@ _styles: >
   }
 ---
 
+Team Number 54
+
 Link : https://satish.dev/projects/184_milestone/
+
+Proposal Link : https://satish.dev/projects/184_proposal/
 
 Slides : https://docs.google.com/presentation/d/1Xtp83b7pyEKYRISCwhU9ZiQJkb9-J2A-jG7GtQ50qKQ/edit?usp=sharing
 
