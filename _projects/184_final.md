@@ -210,7 +210,7 @@ In order to simulate diffraction, we needed to implement a way to assign negativ
 
 ### 3. Usage
 
-After these changes, we could now access these fields in our pathtracer.
+After these changes, we could access these fields in our pathtracer.
 
 ```cpp
 if (light->is_negative()) {
