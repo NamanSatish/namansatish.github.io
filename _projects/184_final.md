@@ -160,3 +160,61 @@ plt.show()
         </div>
     </div>
 </div>
+
+# Modifications to the Pathtracer
+
+## Negative Lights and Nanometer
+
+In order to simulate diffraction, we needed to implement a way to assign negative light sources to the pathtracer. Thankfully, negative radiance is smoothly handled already, but we have specific negative light interactions that we want to perform, thus, we added a new boolean member to the `SceneLight` class, which would be set to true if the light's radiance was negative. We also added a new integer member to store the wavelength of the light in nanometers, which would be used for diffraction calculations.
+
+### 1. scene.h
+
+- **New members in `SceneLight`**
+
+  - `bool negative_`
+  - `int nanometer_`
+
+- **Default constructor**  
+  Initialized both members to safe defaults:
+
+  ```cpp
+  SceneLight() : negative_(false), nanometer_(0) { }
+  ```
+
+- **Getters added**
+
+  ```cpp
+  bool is_negative() const;
+  int  nanometer()    const;
+  ```
+
+- **Helper function**
+  ```cpp
+  void init_radiance_features(const Vector3D &rad);
+  ```
+  - Sets `negative_` if any RGB component of `rad` is < 0.
+  - Chooses `nanometer_` = 650 nm (red), 525 nm (green), 450 nm (blue) based on the largest absolute channel.
+  - Defaults to Red if all channels are 0.
+
+### 2. light.cpp
+
+- **Invoked `init_radiance_features`** in our PointLight constructor:
+  ```cpp
+  PointLight::PointLight(const Vector3D rad, const Vector3D pos)
+    : radiance(rad), position(pos) {
+      init_radiance_features(rad);
+      …
+  }
+  ```
+  Similar calls were not needed for `DirectionalLight`, `InfiniteHemisphereLight`, `SpotLight`, `AreaLight`, `SphereLight`, and `MeshLight` since those are not used in our model of diffraction.
+
+### 3. Usage
+
+After these changes, we could now access these fields in our pathtracer.
+
+```cpp
+if (light->is_negative()) {
+  // handle negative‐intensity sources
+}
+int λ = light->nanometer();  // 650, 525, or 450
+```
