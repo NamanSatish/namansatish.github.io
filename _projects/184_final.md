@@ -242,20 +242,20 @@ The results of our implementation are shown below. We included details regarding
       </div>
       <div class="row align-items-center text-center">
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_wave_nm_4.5_am_15_11s.png" alt="Octogon Green Wave NM 4.5 AM 15" %}
-            <div class="caption">Octogon - Wave, NM 4.5, AM 15, 11s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_wave_nm_4.5_am_15_11s.png" alt="Octagon Green Wave NM 4.5 AM 15" %}
+            <div class="caption">Octagon - Wave, NM 4.5, AM 15, 11s</div>
         </div>
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_alf_nm_4.5_am_100_812s.png" alt="Octogon Green ALF NM 4.5 AM 100" %}
-            <div class="caption">Octogon - ALF, NM 4.5, AM 100, 812s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_alf_nm_4.5_am_100_812s.png" alt="Octagon Green ALF NM 4.5 AM 100" %}
+            <div class="caption">Octagon - ALF, NM 4.5, AM 100, 812s</div>
         </div>
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_wave_nm_4.5_am_10_41s.png" alt="Octogon All Wave NM 4.5 AM 10" %}
-            <div class="caption">Octogon - Wave, NM 4.5, AM 10, 41s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_wave_nm_4.5_am_10_41s.png" alt="Octagon All Wave NM 4.5 AM 10" %}
+            <div class="caption">Octagon - Wave, NM 4.5, AM 10, 41s</div>
         </div>
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_alf_nm_4_am_125_3773s.png" alt="Octogon All ALF NM 4 AM 125" %}
-            <div class="caption">Octogon - ALF, NM 4, AM 125, 3773s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_alf_nm_4_am_125_3773s.png" alt="Octagon All ALF NM 4 AM 125" %}
+            <div class="caption">Octagon - ALF, NM 4, AM 125, 3773s</div>
         </div>
       </div>
       <div class="row align-items-center text-center">
