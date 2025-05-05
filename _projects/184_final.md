@@ -2,14 +2,22 @@
 layout: distill
 title: "Final Report, Apollo: Augmenting Light Functions to Simulate Wave-Based Diffraction"
 description: "Final Project in CS184 : Foundations of Computer Graphics"
-img: assets/img/cs184/final/apollo.png
+img: assets/img/cs184/final/render.gif
 importance: 13
-date: 2025-04-26
+date: 2025-05-04
 category: school
-bibliography: empty.bib
+bibliography: 184final.bib
 toc:
-  - name: "Current Progress"
-  - name: "Plans Going Forward"
+  - name: "Abstract"
+  - name: "Initial Analysis"
+  - name: "Technical Approach"
+  - name: "Implementation"
+  - name: "Problems Encountered"
+  - name: "Learning Outcomes"
+  - name: "Results"
+  - name: "Goals"
+  - name: "References"
+  - name: "Contributions"
 authors:
   - name: Cashus Karladan Puhvel
     affiliations:
@@ -47,110 +55,51 @@ _styles: >
   }
 ---
 
-Team Number 54
+**Team Number 54**
 
-Final Report : https://satish.dev/projects/184_final/
+**Final Report** : [https://satish.dev/projects/184_final/](https://satish.dev/projects/184_final/)
 
-Milestone : https://satish.dev/projects/184_milestone/
-Slides : https://docs.google.com/presentation/d/1Xtp83b7pyEKYRISCwhU9ZiQJkb9-J2A-jG7GtQ50qKQ/edit?usp=sharing
-Video Link: https://youtu.be/FEWRREKrkVo
+**Final Video** : [https://youtu.be/q\_\_vekWq_io](https://youtu.be/q__vekWq_io)
 
-Proposal Link : https://satish.dev/projects/184_proposal/
+**Final Presentation** : [Canva](https://www.canva.com/design/DAGmJ78nsGk/yrQAxFzjsaKED1NO3l5eig/view?utm_content=DAGmJ78nsGk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc64ecb1ad7)
 
-# Analysis
+**Github Repo** : [Github](https://github.com/NamanSatish/cs184_apollo/)
 
-We began with an analysis of the pathtracer from the end of Homework 3, testing out some of the features that we would need to implement and seeing how they rendered prior to implemention. This exposed some unique intricacies of the pathtracer that we did not initially expect!
+---
 
-While our first thought on how to approach the project was to physically mockup Young's double slit experiment, we found a more intuitive and unexplored approach to simulating diffraction through the use of negative radiance. Before we set out to implement this, we wanted to test out the pathtracer's ability to render negative radiance.
+**Milestone** : https://satish.dev/projects/184_milestone/
 
-To set up the basis for our experimentation, we constructed a simple scene in blender with a vertical plane a bit behind the axis, a plane with two vertical slits offset from the center, and 3 point lights between the plane and the camera. The lights were arranged in a horizontal line and from left to right, were applied with light strengths of 1, -0.3, and 0.1.
+**Slides** : https://docs.google.com/presentation/d/1Xtp83b7pyEKYRISCwhU9ZiQJkb9-J2A-jG7GtQ50qKQ/edit?usp=sharing
 
-<div class="container l-page">
-    <div class="row align-items-center text-center">
-        <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/blender_setup.png" alt="Blender Scene" %}
-            <div class="caption">Blender Scene</div>
-        </div>
-        <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_1.png" alt="Naive Rendering" %}
-            <div class="caption">Naive Rendering</div>
-        </div>
-    </div>
-    <div class="row align-items-center text-center">
-        <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_2.png" alt="Naive Rendering" %}
-            <div class="caption">Naive Rendering</div>
-        </div>
-        <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_3.png" alt="Naive Rendering" %}
-            <div class="caption">Naive Rendering</div>
-        </div>
-    </div>
+**Video Link**: https://youtu.be/FEWRREKrkVo
+
+---
+
+**Proposal Link** : https://satish.dev/projects/184_proposal/
+
+# Abstract
+
+In this project, we explore the simulation of light diffraction using a pathtracer. We implement a method to simulate Young's double-slit experiment as well as shaped aperture diffraction patterns. Our approach is based on the paper "Rendering Wave Effects with Augmented Light Field"<d-cite key="oh2010renderingwaveeffects"></d-cite> and "Augmenting Light Field to model Wave Optics effects" <d-cite key="oh2009augmentinglightfieldmodel"></d-cite> by Se Baek Oh et al. The paper proposes a method to augment the classic light field with "virtual light projectors" which can create variable radiance values, including negative radiance. We extend the pathtracer to support these virtual light projectors, allowing us to simulate diffraction patterns and interference effects.
+
+We also modified the pathtracer to perform a full wave simulation of rays, allowing us to calculate the phase of each ray based on its wavelength, and switching from a scalar radiance summation to a complex amplitude summation. This enables us to accurately simulate the interference patterns produced by multiple light sources, without the use of virtual light projectors.
+
+Our results show that the pathtracer is capable of accurately simulating these phenomena, providing a powerful tool for exploring the wave nature of light.
+
+<div class="row mx-auto" style="text-align: center;">
+  <div class="col-sm mt-3 mt-md-0" id="inspirational_quote">
+    “[The double-slit experiment] has in it the heart of quantum mechanics. In reality, it contains the only mystery. —Richard Feynman
+  </div>
 </div>
 
-The closer darker green rectangle is the plane with slits, and the background with the colors is our vertical plane. The variety of colors that was reflected on the wall was very interesting and not expected at all. It did demonstrate that the pathtracer was capable of rendering negative radiance, which was a good sign, and that we were on a good path to implementing our diffraction simulation.
+# Initial Analysis
 
-To better understand this scene, take a look at the following diagram:
+We began with an analysis of the pathtracer from the end of Homework 3, testing out some of the features that we would need to implement and seeing how they rendered prior to implementation. This exposed some unique intricacies of the pathtracer that we did not initially expect!
 
-{% details **Code** %}
+To set up the basis for our experimentation, we constructed a double slit experiment in Blender using 3 planes (2 long skinny ZY planes mirroring a short ZY plane in the Y-Axis) to test the interference patterns of our 3 differently valued lights. The lights were arranged in a horizontal line and from left to right, were applied with light strengths of 1, -0.3, and 0.1.
 
-```python
-import matplotlib.pyplot as plt
+</div>
 
-# Scene parameters
-light_positions = [(-5, 3), (-5, 0), (-5, -3)]
-intensities = [1, -0.3, 0.1]
-slit_centers = [0.5, -0.5]
-slit_half = 0.2
-back_x = 5
-
-fig, ax = plt.subplots(figsize=(8, 6))
-
-# Draw slit plane at x=0 with two gaps
-ymin, ymax = -10, 10
-segments = [
-    (ymin, slit_centers[1] - slit_half),
-    (slit_centers[1] + slit_half, slit_centers[0] - slit_half),
-    (slit_centers[0] + slit_half, ymax)
-]
-for y0, y1 in segments:
-    ax.plot([0, 0], [y0, y1], linewidth=6)
-
-# Draw back plane at x=5
-ax.plot([back_x, back_x], [ymin, ymax], linewidth=6)
-
-# Label slits
-for idx, center in enumerate(slit_centers, start=1):
-    ax.text(0.1, center, f"Slit {idx}", va='center')
-    ax.plot([0, 0], [center - slit_half, center + slit_half], linewidth=2)
-
-# Draw sources and rays
-for (lx, ly), inten in zip(light_positions, intensities):
-    ax.plot(lx, ly, 'o')
-    t_back = (back_x - lx) / (-lx)
-    for center in slit_centers:
-        # Draw two rays per slit (to each slit edge)
-        for edge in [center - slit_half, center + slit_half]:
-            y_back = ly + t_back * (edge - ly)
-            ax.plot([lx, back_x], [ly, y_back], linestyle='--')
-        # Label intensity at midpoint of slit projection
-        y_mid = ly + t_back * (center - ly)
-        #ax.text(back_x + 0.1, y_mid, str(inten), va='center')
-
-# Annotate planes
-ax.text(-0.3, 4.5, "Slit plane", rotation=90, va='center')
-ax.text(back_x + 0.3, 4.5, "Back plane", rotation=90, va='center')
-
-# Final formatting
-ax.set_xlim(-6, 6)
-ax.set_ylim(-6, 6)
-ax.set_aspect('equal')
-ax.axis('off')
-
-plt.show()
-```
-
-{% enddetails %}
+The closer darker green rectangle is our slit plane, and the background with the colors is a plane further in the X-Axis to capture their interference patterns. The variety of colors that was reflected on the wall was very interesting and not initially expected. While negative radiance is not a property of normal physics, the pathtracer handled negative lights in an understandable way, subtracting the contribution instead of adding. With the knowledge that there was no deeply embedded prevention of negative radiances, we knew we were on a good path to implementing our diffraction simulation.
 
 <div class="container l-page">
     <div class="row align-items-center text-center">
@@ -158,63 +107,229 @@ plt.show()
             {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_colors.png" alt="Slit Colors" %}
             <div class="caption">Initial Slit Coloring</div>
         </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_blender.png" alt="Slit Blender" %}
+            <div class="caption">Blender Slit Setup</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_1.png" alt="Negative 0.3 1" %}
+            <div class="caption">View 1</div>
+        </div>
+      </div>
+      <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_2.png" alt="Negative 0.3 2" %}
+            <div class="caption">View 2</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/negative_0p3_3.png" alt="Negative 0.3 3" %}
+            <div class="caption">View 3</div>
+        </div>
     </div>
 </div>
 
-# Modifications to the Pathtracer
+# Technical Approach
 
-## Negative Lights and Nanometer
+## Introduction
 
-In order to simulate diffraction, we needed to implement a way to assign negative light sources to the pathtracer. Thankfully, negative radiance is smoothly handled already, but we have specific negative light interactions that we want to perform, thus, we added a new boolean member to the `SceneLight` class, which would be set to true if the light's radiance was negative. We also added a new integer member to store the wavelength of the light in nanometers, which would be used for diffraction calculations.
+Upon reading both papers, we realized that the simulation of diffraction was not as simple as we had initially thought. Our normal pathtracer treats light as incoherent, "a superposition of infinite numbers of plane waves with random phase delays" <d-cite key="oh2009augmentinglightfieldmodel"></d-cite>. This means that the light reaches the surface with completely random phase delays, and thus the light rays do not interfere with each other. This is a good approximation for most cases, but it does not accurately capture the wave nature of light.
 
-### 1. scene.h
+In order to simulate interference patterns, we need to understand the coherence of light: the property of light rays that enables them to interfere with each other. The most intuitive way to represent this in our pathtracer was to use point sources, which can be treated as a coherent light emitter, where each wavefront from the source shares the same phase.
 
-- **New members in `SceneLight`**
+Our implementation in the pathtracer consists of two complementary modes of simulating diffraction and interference, a wave based integrator and an augmented light field with negative lights. There is a flag in the program to select between both branches. Both strategies rely on similar ideas of computing the wave intensity equation, but how they approximate the physical complexities of light through apertures and over distances is different.
 
-  - `bool negative_`
-  - `int nanometer_`
+In our classic Light Field, we project the u-axis down onto X-Axis to compute the intensity at that location. As we can see, in the WDF, there is a 3rd "virtual projector" that contains a changing phase value, which when projected down onto the X-Axis at the screen, does not give us a constant intensity value, but rather a periodic function that oscillates between 0 and a maximum value. The "virtual projector" is a point source that emits light with radiance values that mimic this periodic function, while our wave based integrator calculates the phase information to compute the intensity at each point in space.
 
-- **Default constructor**  
-  Initialized both members to safe defaults:
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/WDFvsLF.png" alt="WDFvsLF" %}
+            <div class="caption">WDF vs LF</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/WDF_Wavefront.png" alt="WDF_Wavefront" %}
+            <div class="caption">WDF of Wavefront</div>
+        </div>
+    </div>
+</div>
 
-  ```cpp
-  SceneLight() : negative_(false), nanometer_(0) { }
-  ```
+## Implementation
 
-- **Getters added**
+The implementation of the wave based integrator and the augmented light field with negative lights was done in the `pathtracer.cpp` file. The most impactful changes were made in the `PathTracer::estimate_direct_lighting_importance` function, where we compute the radiance of our ray-scene intersection.
 
-  ```cpp
-  bool is_negative() const;
-  int  nanometer()    const;
-  ```
+When `waveMode == true`, each ray carries a complex amplitude instead of a radiance value. After intersecting with the scene, we initialize two accumulators to store the real and imaginary components of the electric field at the camera pixel. The radiance is then converted into field amplitude `A = L_i * amplitude_scaling`, where `amplitude_scaling` is user-defined to reveal the diffraction pattern. The wave number `k = 2π/λ` is computed by reading the light’s wavelength in nanometers with `light->nanometer()`, scaling it into scene units with `nanometer_scaling`, and multiplying by `M_PI`. The accumulated optical phase for propagation is then `φ = k * distToLight`. We then split this into real and imaginary contributions using Euler's formula, which initializes `E_re = A * cos(φ) * (invR)` and `E_im = A * sin(φ) * (invR)`. Although E decays as 1/r, we hold `invR` at 1 for image demonstrations. To integrate over all paths, we weight each field sample by the BSDF, geometry term, and PDF. After summing `accum_re` and `accum_im` across all lights and samples, the final radiance output is reconstructed as `I = |E|² = re² + im²` per color channel. This direct phase accumulation yields high-fidelity and fast rendering fringes that respect both Fresnel and Fraunhofer regimes.
 
-- **Helper function**
-  ```cpp
-  void init_radiance_features(const Vector3D &rad);
-  ```
-  - Sets `negative_` if any RGB component of `rad` is < 0.
-  - Chooses `nanometer_` = 650 nm (red), 525 nm (green), 450 nm (blue) based on the largest absolute channel.
-  - Defaults to Red if all channels are 0.
+When `waveMode == false`, the code falls back to an ALF-style convolution using “negative” lights to create the interference patterns. First, in our scene creation, we create negative lights between every pair of positive lights. This is done by injecting additional `SceneObject::PointLights` into the lights used to render the scene. These Virtual Projectors together represent an approximation of the WDF. In the double pinhole case, this approximation is accurate, but requires high density for approximations when mimicking apertures. In this branch if `light->is_negative()` returns true, the code treats that sample as a virtual projector. The virtual projector’s radiance is calculated by extending the 1D term from the paper `2cos(2π[a-b](θ/λ)`<d-cite key="oh2009augmentinglightfieldmodel"></d-cite> to 3 dimensions. It first computes `δ = dot(light->diff(), w_in)`, where `light->diff()` encodes the vector between the two real lights the virtual projector is between. Multiplying by the wave number `k` yields the phase difference between rays passing through each slit (`phase = k * δ`). The amplitude modulation term `mod = 2·cos(phase)` results in a variable modulation to our applied radiance. We then form a signed radiance vector `Lm = L_i * mod * amplitude_scaling` and subtract it (`-Lm`) in the outgoing sum, effectively carving out the occluded geometry while leaving the diffracted wave intact.
 
-### 2. light.cpp
+## Problems Encountered
 
-- **Invoked `init_radiance_features`** in our PointLight constructor:
-  ```cpp
-  PointLight::PointLight(const Vector3D rad, const Vector3D pos)
-    : radiance(rad), position(pos) {
-      init_radiance_features(rad);
-      …
-  }
-  ```
-  Similar calls were not needed for `DirectionalLight`, `InfiniteHemisphereLight`, `SpotLight`, `AreaLight`, `SphereLight`, and `MeshLight` since those are not used in our model of diffraction.
+The scenes we chose to model (double slit and various shaped apertures), were chosen both as a goal for us to render but additionally as feasible with both our wave based accumulator and our virtual projectors. We encountered issues with understanding the complex nature of light, and the challenges the paper was trying to overcome. In our initial attempt, we directly implemented the wave accumulator and defined our virtual projectors in Blender, which worked for simple scenes. Upon reflection at 3AM on Sunday, a difference was noted with our double slit pattern and the actual solution, and when removing the virtual projector, the correct pattern emerged. This was an indication that we had incorrectly understood the significance of the virtual projector, and upon further examination we were able to change more sections of the codebase to implement the ideas of the virtual projector and retain our wave accumulator to compare between both patterns. We found they had extremely similar solutions, which differed based on our modifications to nanometer scaling or amplitude scaling (which in the ALF increased contrast, and increased overall light in Wave based). Unfortunately, the ALF did not offer any speed improvements for us, as the number of virtual projectors quadratically increased with the higher densities required for aperture diffraction. However, the overall quality of the diffraction pattern was significantly better and much more vibrant thanks to the amplitude scaling affecting the contrast.
 
-### 3. Usage
+There were many challenges in injecting our virtual projectors as well, requiring us to step between the DAE parsing and SceneObject creation to insert new objects. Unfortunately, certain classes were very similarly named creating difficulty in understanding initially the flow of information to create the scene. After a few hours, the entire process was understood and additional variables were added to keep track of necessary parameters for the Augmented Light Field’s virtual projectors and the nanometer of the light.
 
-After these changes, we could access these fields in our pathtracer.
+The difficulty of the project prevented us from going further in the ALF implementation, however we did attempt to implement wave-based BSDF sampling as described in <d-cite key="cuypers2011raybaseddiffraction"></d-cite>. This was a very interesting idea which built atop ALF, but we were unable to implement it in time.
 
-```cpp
-if (light->is_negative()) {
-  // handle negative‐intensity sources
-}
-int λ = light->nanometer();  // 650, 525, or 450
-```
+## Learning Outcomes
+
+Overall, these code additions faithfully implement light diffraction within the standard path-tracing framework. We learned a lot about the nature of light and the complexities of simulating it and the numerous ways to approach the problem. Extending the scene creation of the pathtracer additionally helped teach us the importance of understanding the flow of information, to keep track of variables, classes, and function calls, and the importance of clear naming conventions. Our issues with the virtual projectors were a great learning opportunity to consistently check our assumptions and question whether our understanding was correct, Oh et al.'s paper continued to reveal more information with every read, and because of our insistence to challenge our own understandings, we were able to catch our mistakes and correct them.
+
+# Results
+
+The results of our implementation are shown below. We included details regarding the scaling of the wavelength and amplitude, as well as the time taken to render each image. The first row shows the results of the double slit experiment, where we can see the interference pattern created by the two slits. The following rows show the results of various shaped apertures, including a square, circle, and octagon. Notably, the circular aperture produces a very accurate Airy disk pattern, which is a well-known diffraction pattern produced by circular apertures. The square aperture additionally aligns with the expected diffraction pattern.
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_green_screenshot_wave_nm_5_am_1_0.13s.png" alt="Slit Green Screenshot Wave NM 5 AM 1" %}
+            <div class="caption">Slit - Wave, NM 5, AM 1, 0.13s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_green_screenshot_alf_nm_5_am_1_0.14s.png" alt="Slit Green Screenshot ALF NM 5 AM 1" %}
+            <div class="caption">Slit - ALF, NM 5, AM 1, 0.14s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_all_screenshot_wave_nm_5_am_4_0.57s.png" alt="Slit All Screenshot Wave NM 5 AM 4" %}
+            <div class="caption">Slit - Wave, NM 5, AM 4, 0.57s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/slit_all_screenshot_alf_nm_5_am_1_0.6s.png" alt="Slit All Screenshot ALF NM 5 AM 1" %}
+            <div class="caption">Slit - ALF, NM 5, AM 1, 0.6s</div>
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_all_screenshot_alf_nm_4.5_am_75_1894s.png" alt="Square All Screenshot ALF NM 4.5 AM 75" %}
+            <div class="caption">Square - ALF, NM 4.5, AM 75, 1894s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_all_screenshot_wave_nm_4.5_am_40_26s.png" alt="Square All Screenshot Wave NM 4.5 AM 40" %}
+            <div class="caption">Square - Wave, NM 4.5, AM 40, 26s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_red_far_screenshot_alf_nm_5_am_75_470s.png" alt="Square Red Far Screenshot ALF NM 5 AM 75" %}
+            <div class="caption">Square - ALF, NM 5, AM 75, 470s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_red_far_screenshot_wave_nm_5_am_79_7s.png" alt="Square Red Far Screenshot Wave NM 5 AM 79" %}
+            <div class="caption">Square - Wave, NM 5, AM 79, 7s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_green_screenshot_alf_nm_5_am_50_398s.png" alt="Square Green Screenshot ALF NM 5 AM 50" %}
+            <div class="caption">Square - ALF, NM 5, AM 50, 398s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/square_green_screenshot_wave_nm_5_am_50_19s.png" alt="Square Green Screenshot Wave NM 5 AM 50" %}
+            <div class="caption">Square - Wave, NM 5, AM 50, 19s</div>
+        </div>
+    </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_green_screenshot_nowave_nm_4_5_am_25_3375s.png" alt="Circle Green Screenshot No Wave NM 4.5 AM 25" %}
+            <div class="caption">Circle - ALF, NM 4.5, AM 25, 3375s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_green_screenshot_wave_nm_4_5_am_25_53s.png" alt="Circle Green Screenshot Wave NM 4.5 AM 25" %}
+            <div class="caption">Circle - Wave, NM 4.5, AM 25, 53s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_all_wave_nm_4.5_am_20_11s.png" alt="Circle All Wave NM 4.5 AM 20" %}
+            <div class="caption">Circle - Wave, NM 4.5, AM 20, 11s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_all_alf_nm_4.5_am_50_1073s.png" alt="Circle All ALF NM 4.5 AM 50" %}
+            <div class="caption">Circle - ALF, NM 4.5, AM 50, 1073s</div>
+        </div>
+      </div>
+      <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_wave_nm_4.5_am_15_11s.png" alt="Octogon Green Wave NM 4.5 AM 15" %}
+            <div class="caption">Octogon - Wave, NM 4.5, AM 15, 11s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_green_alf_nm_4.5_am_100_812s.png" alt="Octogon Green ALF NM 4.5 AM 100" %}
+            <div class="caption">Octogon - ALF, NM 4.5, AM 100, 812s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_wave_nm_4.5_am_10_41s.png" alt="Octogon All Wave NM 4.5 AM 10" %}
+            <div class="caption">Octogon - Wave, NM 4.5, AM 10, 41s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/octogon_all_alf_nm_4_am_125_3773s.png" alt="Octogon All ALF NM 4 AM 125" %}
+            <div class="caption">Octogon - ALF, NM 4, AM 125, 3773s</div>
+        </div>
+      </div>
+      <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/triangle_green_screenshot_wave_nm_5_am_10_854s.png" alt="Triangle Green Screenshot Wave NM 5 AM 10" %}
+            <div class="caption">Triangle - Wave, NM 5, AM 10, 854s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/triangle_green_screenshot_nowave_nm_5_am_10_854s.png" alt="Triangle Green Screenshot No Wave NM 5 AM 10" %}
+            <div class="caption">Triangle - No Wave, NM 5, AM 10, 854s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/horizontal_green_screenshot_wave_nm_5_am_5_75s.png" alt="Horizontal Green Screenshot Wave NM 5 AM 5" %}
+            <div class="caption">Horizontal - Wave, NM 5, AM 5, 75s</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/horizontal_green_screenshot_nowave_nm_5_am_5_11s.png" alt="Horizontal Green Screenshot No Wave NM 5 AM 5" %}
+            <div class="caption">Horizontal - No Wave, NM 5, AM 5, 11s</div>
+        </div>
+      </div>
+</div>
+
+Here is a gif of the rendering process.
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/render.gif" alt="Render" %}
+            <div class="caption">Rendering Process</div>
+        </div>
+    </div>
+</div>
+
+## Goals
+
+Our reference diffraction patterns were the following:
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/farzone.png" alt="Farzone" %}
+            <div class="caption">Square Aperture</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/Airy_disk.png" alt="Airy Disk" %}
+            <div class="caption">Circular Aperture</div>
+        </div>
+      </div>
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/white_diffraction.png" alt="White Diffraction" %}
+            <div class="caption">White Diffraction</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/wave.png" alt="Wave" %}
+            <div class="caption">All color square diffraction</div>
+        </div>
+    </div>
+</div>
+
+# References
+
+1. Oh, Se Baek, George Barbastathis, and Ramesh Raskar. _Augmenting Light Field to model Wave Optics effects_. Preprint, Massachusetts Institute of Technology, July 2009. [https://arxiv.org/abs/0907.1545](https://arxiv.org/abs/0907.1545)
+
+2. Oh, Se Baek, Sriram Kashyap, Rohit Garg, Sharat Chandran, and Ramesh Raskar. _Rendering Wave Effects with Augmented Light Field_. _Computer Graphics Forum_, vol. 29, no. 2, pp. 507–516, June 2010. DOI: [10.1111/j.1467-8659.2009.01620.x](https://doi.org/10.1111/j.1467-8659.2009.01620.x). [https://dspace.mit.edu/handle/1721.1/66536](https://dspace.mit.edu/handle/1721.1/66536)
+
+3. Cuypers, Tom, Se Baek Oh, Tom Haber, Philippe Bekaert, and Ramesh Raskar. _Ray-Based Reflectance Model for Diffraction_. Preprint, 2011. [http://arxiv.org/abs/1101.5490](http://arxiv.org/abs/1101.5490)
+
+# Contributions
+
+- **Naman Satish** - Developed the Wave and ALF simulation and adaption from 1D to 3D, injection of negative projector creation, and initial Blender scene creation and scripting.
+
+- **Nicholas Tran** - Blender scene generation scripting, scene creation, Wave BSDF attempt, presentation slides.
+
+- **Kevin Tseng** - Wave BSDF replication attempt, mathematical research, video script.
+
+- **Cashus Puhvel** - Pathtracer infrastructure exploration, extensive wave BSDF attempt which ended up being incompatible with existing pathtracer code, helped with writeup, video editor.
