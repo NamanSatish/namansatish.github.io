@@ -306,7 +306,7 @@ Our reference diffraction patterns were the following:
       </div>
     <div class="row align-items-center text-center">
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/white_diffraction.png" alt="White Diffraction" %}
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/white_diffraction.jpg" alt="White Diffraction" %}
             <div class="caption">White Diffraction</div>
         </div>
         <div class="col">
