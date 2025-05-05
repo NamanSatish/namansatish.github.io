@@ -224,7 +224,7 @@ The results of our implementation are shown below. We included details regarding
     </div>
     <div class="row align-items-center text-center">
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_green_screenshot_nowave_nm_4_5_am_25_3375s.png" alt="Circle Green Screenshot No Wave NM 4.5 AM 25" %}
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/circle_green_screenshot_nowave_nm_4_5_am_25_3375s.png" alt="Circle Green Screenshot ALF NM 4.5 AM 25" %}
             <div class="caption">Circle - ALF, NM 4.5, AM 25, 3375s</div>
         </div>
         <div class="col">
@@ -264,16 +264,16 @@ The results of our implementation are shown below. We included details regarding
             <div class="caption">Triangle - Wave, NM 5, AM 10, 854s</div>
         </div>
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/triangle_green_screenshot_nowave_nm_5_am_10_854s.png" alt="Triangle Green Screenshot No Wave NM 5 AM 10" %}
-            <div class="caption">Triangle - No Wave, NM 5, AM 10, 854s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/triangle_green_screenshot_nowave_nm_5_am_10_854s.png" alt="Triangle Green Screenshot ALF NM 5 AM 10" %}
+            <div class="caption">Triangle - ALF, NM 5, AM 10, 854s</div>
         </div>
         <div class="col">
             {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/horizontal_green_screenshot_wave_nm_5_am_5_75s.png" alt="Horizontal Green Screenshot Wave NM 5 AM 5" %}
             <div class="caption">Horizontal - Wave, NM 5, AM 5, 75s</div>
         </div>
         <div class="col">
-            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/horizontal_green_screenshot_nowave_nm_5_am_5_11s.png" alt="Horizontal Green Screenshot No Wave NM 5 AM 5" %}
-            <div class="caption">Horizontal - No Wave, NM 5, AM 5, 11s</div>
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/cs184/final/horizontal_green_screenshot_nowave_nm_5_am_5_11s.png" alt="Horizontal Green Screenshot ALF NM 5 AM 5" %}
+            <div class="caption">Horizontal - ALF, NM 5, AM 5, 11s</div>
         </div>
       </div>
 </div>
