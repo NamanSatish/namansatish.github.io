@@ -49,7 +49,7 @@ In this project, I will be creating a programming language called **Splang**. Th
   </div>
 </div>
 
-Splang is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. This feature-rich IDE enables users to create, edit, share, and collaborate on Splang programs through their playlist interface. A public method to execute Splang programs is in development, but in the interim, users can run their programs locally.
+Splang is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. This **feature-rich IDE** enables users to create, edit, share, and collaborate on Splang programs through their playlist interface, all while listening to music! A public method to execute Splang programs is in development, but in the interim, users can run their programs locally.
 
 # Language Design
 
@@ -117,8 +117,8 @@ As such, I give you **Splang v1.0 Language Reference**.
 | 0:03     | `JUMP`            | 1                | Jumps to the label defined by the (song + 1) trackID.                                                                              |
 | 0:04     | `JUMPZ`           | 1                | Jumps to the label defined by the (song + 1) trackID if the top of the stack is 0.                                                 |
 | 0:05     | `JUMPNZ`          | 1                | Jumps to the label defined by the (song + 1) trackID if the top of the stack is not 0.                                             |
-| 0:06     | `JUMPZ_HEAP`      | 2                | Jumps to the label defined by the (song + 1) trackID if the value at the index defined by the (song + 2) trackID in heap is 0.     |
-| 0:07     | `JUMPNZ_HEAP`     | 2                | Jumps to the label defined by the (song + 1) trackID if the value at the index defined by the (song + 2) trackID in heap is not 0. |
+| 0:06     | `JUMPZ_HEAP`      | 1                | Jumps to the label defined by the (song + 1) trackID if the value at the index defined by the (song + 1) trackID in heap is 0.     |
+| 0:07     | `JUMPNZ_HEAP`     | 1                | Jumps to the label defined by the (song + 1) trackID if the value at the index defined by the (song + 1) trackID in heap is not 0. |
 | 0:08     | `CALL`            | 1                | Pushes return address to RA stack and jumps to the label defined by the (song + 1) trackID.                                        |
 | 0:09     | `RETURN`          | None             | Pops the return address from the RA stack and jumps to it.                                                                         |
 | 0:10     | `ADD`             | None             | Adds the top two elements of the stack and pushes the result.                                                                      |
@@ -142,13 +142,13 @@ As such, I give you **Splang v1.0 Language Reference**.
 | 0:28     | `SWAP`            | None             | Swaps the top two elements of the stack.                                                                                           |
 | 0:29     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
 | 0:30     | `STORE`           | 1                | Stores the top element of the stack in heap at the index defined by the (song + 1)'s trackID.                                      |
-| 0:31     | `STORE_TOP`       | 0                | Stores the top element of the stack in the heap at the index defined by the second element of the stack.                           |
+| 0:31     | `STORE_TOP`       | None             | Stores the top element of the stack in the heap at the index defined by the second element of the stack.                           |
 | 0:32     | `LOAD`            | 1                | Loads the value at the index defined by the (song + 1)'s trackID from heap to the stack.                                           |
 | 0:33     | `LOAD_TOP`        | None             | Loads the value at the index defined by the top element of the stack from heap to the stack.                                       |
-| 0:34     | `INC`             | 1                | Increments the value at the index defined by the (song + 1)'s trackID in heap.                                                     |
-| 0:35     | `DEC`             | 1                | Decrements the value at the index defined by the (song + 1)'s trackID in heap.                                                     |
-| 0:36     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
-| 0:37     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
+| 0:34     | `INC_HEAP`        | 1                | Increments the value at the index defined by the (song + 1)'s trackID in heap.                                                     |
+| 0:35     | `DEC_HEAP`        | 1                | Decrements the value at the index defined by the (song + 1)'s trackID in heap.                                                     |
+| 0:36     | `INC`             | None             | Increments the top element of the stack.                                                                                           |
+| 0:37     | `DEC`             | None             | Decrements the top element of the stack.                                                                                           |
 | 0:38     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
 | 0:39     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
 | 0:40     | `STDIN_INT`       | None             | Reads an integer until a newline from stdin and pushes it to the stack.                                                            |
@@ -174,4 +174,19 @@ As such, I give you **Splang v1.0 Language Reference**.
 
 # Issues
 
-There is inconsistent conversion from duration_ms to displayed duration in the Spotify UI. For example, Sweet Home Alabama by Lynyrd Skynyrd is displayed as 4:43, but the duration_ms is 283800. When playing the song, it may initially flash 4:44 in the playback bar UI, but will then change to 4:43. Different times are displayed on the WebUI vs the CEF application. While timings were completely unpredictable in the WebUI, the CEF application was consistent with most songs, 89 of my randomly sampled songs successfully converted to the correct seconds value, however Sweet Home Alabama never achieved the correct seconds value. Splang may have recieved its v1.0 release, but it is clear the IDE is still in ongoing development.
+There is inconsistent conversion from duration_ms to displayed duration in the Spotify UI. For example, Sweet Home Alabama by Lynyrd Skynyrd is displayed as 4:43, but the duration_ms is 283800. When playing the song, it may initially flash 4:44 in the playback bar UI, but will then change to 4:43. Different times are displayed on the WebUI vs the CEF application. While timings were completely unpredictable in the WebUI, the CEF application was consistent with most songs, 89 of my randomly sampled songs successfully converted to the correct seconds value, however Sweet Home Alabama never achieved the 4:43 seconds value without ruining the conversion for other songs.
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/splang/sweet_43.png" alt="Sweet Home Alabama 43 seconds" %}
+            <div class="caption">4:43 displayed in search results</div>
+        </div>
+        <div class="col">
+            {% include figure.liquid loading="lazy" zoomable=true path="assets/img/splang/sweet_44.png" alt="Sweet Home Alabama 44 seconds" %}
+            <div class="caption">4:44 displayed in playlist view</div>
+        </div>
+    </div>
+</div>
+
+Our takeaway should be : Splang may have recieved its v1.0 release, but it is clear the **IDE is still in ongoing development**.
