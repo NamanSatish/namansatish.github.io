@@ -93,7 +93,7 @@ As we can see from the charts above, the distribution of seconds values is relat
 
 The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts. I started my thoughts with the concepts from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters, and further built upon that with the RISC-V instruction set.
 
-Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 14 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
+Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 12 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
 
 As such, I give you **Splang v1.0 Language Reference**.
 
@@ -190,3 +190,135 @@ There is inconsistent conversion from duration_ms to displayed duration in the S
 </div>
 
 Our takeaway should be : Splang may have recieved its v1.0 release, but it is clear the **IDE is still in ongoing development**.
+
+# Examples
+
+Here is Hello World in Splang:
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+        <div class="col">
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7cPsICy0U7WM8Q67SuYXds?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+    </div>
+</div>
+
+This splang interacts with the stdout, as well as the heap and stack. It takes advantage of loops, jumps, and labels to print **HELLOWORLD**. Shareable through the link `https://open.spotify.com/playlist/7cPsICy0U7WM8Q67SuYXds`, which could be compressed to `7cPsICy0U7WM8Q67SuYXds`, the only part of the URL that is needed to run the program, Splang is clearly a very efficient language and has the incredible property of all programs taking the same amount of local storage, 22 bytes! We will have to thank the IDE developers for providing this service along with our subscription!
+
+Here’s a step-by-step walkthrough of how your playlist program prints **HELLOWORLD**:
+
+1. **PC 0** – `duration_min = 4:44` ⇒ seconds = 44 ⇒ **`READ_CHAR`** (1 param)
+
+   - Param at PC 1: `first_letter = 'D'` ⇒ push `ord('D') = 68` onto the stack
+   - Advance PC: 0 + 1 + 1 = **2**
+
+2. **PC 2** – `4:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 3: `'L'` ⇒ push 76
+   - Next PC: **4**
+
+3. **PC 4** – `4:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 5: `'R'` ⇒ push 82
+   - Next PC: **6**
+
+4. **PC 6** – `2:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 7: `'O'` ⇒ push 79
+   - Next PC: **8**
+
+5. **PC 8** – `2:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 9: `'W'` ⇒ push 87
+   - Next PC: **10**
+
+6. **PC 10** – `4:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 11: `'O'` ⇒ push 79
+   - Next PC: **12**
+
+7. **PC 12** – `2:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 13: `'L'` ⇒ push 76
+   - Next PC: **14**
+
+8. **PC 14** – `2:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 15: `'L'` ⇒ push 76
+   - Next PC: **16**
+
+9. **PC 16** – `3:44` ⇒ **`READ_CHAR`**
+
+   - Param at PC 17: `'E'` ⇒ push 69
+   - Next PC: **18**
+
+10. **PC 18** – `3:44` ⇒ **`READ_CHAR`**
+
+    - Param at PC 19: `'H'` ⇒ push 72
+    - Next PC: **20**
+
+11. **PC 20** – `2:20` ⇒ **`PUSH_LS`** (1 param)
+
+    - Param at PC 21: $(last\_second\_place = 9)$ ⇒ push 9
+    - Next PC: **22**
+
+12. **PC 22** – `2:36` ⇒ **`INC`**
+
+    - Increment top of stack (9) by 1 ⇒ push 10
+    - Next PC: **23**
+
+13. **PC 23** – `4:30` ⇒ **`STORE`** (1 param)
+
+    - Param at PC 24: `track_id = 'Think About'` ⇒ pop 10, store `heap['Think About'] = 10`
+    - Next PC: **25**
+
+14. **PC 25** – `4:02` ⇒ **`LABEL`** (1 param)
+
+    - Param at PC 26: `track_id = 'Think About'` ⇒ record `labels['Think About'] = 25 + 1 + 1 = 27`
+    - Next PC: **27**
+
+---
+
+### Loop (prints one character per iteration)
+
+Each iteration runs the three instructions below, popping one stack value and decrementing the heap counter until it hits zero.
+
+**a. PC 27** – `3:43` ⇒ **`STDOUT`**
+
+- Pop top of stack and print it as `chr(...)`
+- Iterations print, in order:
+
+  1. 72 ⇒ “H”
+  2. 69 ⇒ “E”
+  3. 76 ⇒ “L”
+  4. 76 ⇒ “L”
+  5. 79 ⇒ “O”
+  6. 87 ⇒ “W”
+  7. 79 ⇒ “O”
+  8. 82 ⇒ “R”
+  9. 76 ⇒ “L”
+     10\. 68 ⇒ “D”
+
+**b. PC 28** – `3:35` ⇒ **`DEC_HEAP`** (1 param)
+
+- Param at PC 29: `track_id = 'Think About'` ⇒ decrement `heap['Think About']` by 1
+
+**c. PC 30** – `4:07` ⇒ **`JUMPNZ_HEAP`** (1 param)
+
+- Param at PC 31: `track_id = 'Think About'` ⇒ check `heap['Think About']`
+- If `heap['Think About'] != 0`, jump back to PC 27; otherwise fall through
+- After 10 iterations, `heap['special']` goes from 10 down to 0, so the loop stops.
+
+---
+
+15. **PC 32** – `3:01` ⇒ **`HALT`**
+
+    - Stop execution
+
+---
+
+**Final printed output:**
+
+```
+HELLOWORLD
+```
