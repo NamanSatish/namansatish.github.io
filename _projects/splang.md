@@ -91,26 +91,23 @@ In the same way, we need to ensure that the distribution of these seconds values
 
 As we can see from the charts above, the distribution of seconds values is relatively even, with no statistically significant outliers.
 
-The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts.
+The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts. I started my thoughts with the concepts from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters, and further built upon that with the RISC-V instruction set.
 
-I wanted to build atop the ideas from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters
+Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 14 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
+
 As such, I give you **Splang v1.0 Language Reference**.
 
 # Splang v1.0 Language Reference
 
-LS : Last Second's place, e.g 3:45 --> 5
-
-FS : First Second's place , e.g 3:45 --> 4
-
-TrackID : The unique ID of a song in Spotify's database.
-
-(song + n): The song n positions after the current song in the playlist.
-
-Stack : A LIFO data structure, operates on single elements.
-
-Heap : A data structure that stores values at a specific index, operates on single elements.
-
-RA Stack : A LIFO data structure that stores return addresses for function calls.
+| **Keyterm:** | Description                                                                           |
+| ------------ | ------------------------------------------------------------------------------------- |
+| LS           | Last Second's place, e.g 3:45 --> 5                                                   |
+| FS           | First Second's place , e.g 3:45 --> 4                                                 |
+| TrackID      | The unique ID of a song in Spotify's database.                                        |
+| (song + n)   | The song n positions after the current song in the playlist.                          |
+| Stack        | A LIFO data structure, operates on single elements.                                   |
+| Heap         | A data structure that stores values at a specific index, operates on single elements. |
+| RA Stack     | A LIFO data structure that stores return addresses for function calls.                |
 
 | Time | Command           | Parameter(s) | Description                                                                                                                        |
 | ---- | ----------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -174,3 +171,7 @@ RA Stack : A LIFO data structure that stores return addresses for function calls
 | 0:57 | `LESS`            | None         | Checks if the top element of the stack is less than the second top element and pushes the result.                                  |
 | 0:58 | `GREATER_EQUAL`   | None         | Checks if the top element of the stack is greater than or equal to the second top element and pushes the result.                   |
 | 0:59 | `LESS_EQUAL`      | None         | Checks if the top element of the stack is less than or equal to the second top element and pushes the result.                      |
+
+# Issues
+
+There is inconsistent conversion from duration_ms to displayed duration in the Spotify UI. For example, Sweet Home Alabama by Lynyrd Skynyrd is displayed as 4:43, but the duration_ms is 283800. When playing the song, it may initially flash 4:44 in the playback bar UI, but will then change to 4:43. Different times are displayed on the WebUI vs the CEF application. While timings were completely unpredictable in the WebUI, the CEF application was consistent with most songs, 89 of my randomly sampled songs successfully converted to the correct seconds value, however Sweet Home Alabama never achieved the correct seconds value. Splang may have recieved its v1.0 release, but it is clear the IDE is still in ongoing development.
