@@ -96,7 +96,7 @@ As we can see from the charts above, the distribution of seconds values is relat
 
 The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts. I started my thoughts with the concepts from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters, and further built upon that with the RISC-V instruction set.
 
-Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 12 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
+Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 11 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
 
 As such, I give you **Splang v1.0 Language Reference**.
 
