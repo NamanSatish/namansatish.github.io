@@ -40,12 +40,30 @@ _styles: >
     margin: 20px 0;
     /* background-color: #f9f9f9; */
   }
+  .splang-logo figure {
+    max-width: 250px;      /* adjust to your desired size */
+    margin: 0 auto;        /* keep it centered */
+  }
+  .splang-logo figure img {
+    width: 100%;           /* fill the 250px wrapper */
+    height: auto;          /* preserve aspect ratio */
+  }
 ---
 
 # Abstract
 
 In this project, I will be creating a programming language called **Splang**. The language is designed to be a fun music-based turning-complete esolang. The language is inspired by the importance a playlist has in a person's life, a way to express oneself, interact with others, and share experiences. With this in mind, I wanted to create a language that is not only functional, but similar to the process of creating a playlist, requires thought and care in the placement of each element. A language that seamlessly enables artistic expression in a functional language.
 
+<div class="container splang-logo">
+  {% include figure.liquid 
+       loading="lazy" 
+       zoomable=true 
+       path="assets/img/splang/logo.svg" 
+       alt="Splang Logo" 
+       imagemagick_disabled=true 
+  %}
+</div>
+<br>
 <div class="row mx-auto" style="text-align: center;">
   <div class="col-sm mt-3 mt-md-0" id="inspirational_quote">
   “Music is the universal language of mankind.” - Henry Wadsworth Longfellow
