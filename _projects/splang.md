@@ -11,6 +11,9 @@ toc:
   - name: "Abstract"
   - name: "Language Design"
   - name: "Splang v1.0 Language Reference"
+  - name: "Issues"
+  - name: "Examples"
+  - name: "Conclusion"
 authors:
   - name: Naman Satish
     affiliations:
@@ -49,7 +52,7 @@ In this project, I will be creating a programming language called **Splang**. Th
   </div>
 </div>
 
-Splang is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. This **feature-rich IDE** enables users to create, edit, share, and collaborate on Splang programs through their playlist interface, all while listening to music! A public method to execute Splang programs is in development, but in the interim, users can run their programs locally.
+Splang is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. This **feature-rich IDE** enables users to create, edit, share, and collaborate on Splang programs through their playlist interface, all while listening to music! A public method to execute Splang programs is in development, but in the interim, users can run their programs locally through the [Splang interpreter](https://github.com/NamanSatish/splang) written in Python.
 
 # Language Design
 
@@ -156,7 +159,7 @@ As such, I give you **Splang v1.0 Language Reference**.
 | 0:42     | `STDOUT_INT`      | None             | Pops the top element of the stack and prints it to stdout as an integer.                                                           |
 | 0:43     | `STDOUT`          | None             | Pops the top element of the stack and prints it to stdout as an ASCII character.                                                   |
 | 0:44     | `READ_CHAR`       | 1                | Reads the first character of the (song + 1)'s title and pushes it to the stack as an ASCII value.                                  |
-| 0:45     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
+| 0:45     | `LISTEN`          | 1                | Sleeps for the full duration of the (song + 1).                                                                                    |
 | 0:46     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
 | 0:47     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
 | 0:48     | `Not_implemented` | None             | Not implemented.                                                                                                                   |
@@ -193,7 +196,9 @@ Our takeaway should be : Splang may have recieved its v1.0 release, but it is cl
 
 # Examples
 
-Here is Hello World in Splang:
+## Hello World
+
+Here is [Hello World in Splang](https://open.spotify.com/playlist/7cPsICy0U7WM8Q67SuYXds?si=0c842d5a0aec44c6), a simple program that prints "HELLOWORLD" to the screen. The program is defined as a playlist, and each song in the playlist represents a command in the language. The program is designed to be edited in the IDE, and run through the Splang interpreter.
 
 <div class="container l-page">
     <div class="row align-items-center text-center">
@@ -259,7 +264,7 @@ Here’s a step-by-step walkthrough of how your playlist program prints **HELLOW
 
 11. **PC 20** – `2:20` ⇒ **`PUSH_LS`** (1 param)
 
-    - Param at PC 21: $(last\_second\_place = 9)$ ⇒ push 9
+    - Param at PC 21: (last_second = 9) ⇒ push 9
     - Next PC: **22**
 
 12. **PC 22** – `2:36` ⇒ **`INC`**
@@ -297,7 +302,7 @@ Each iteration runs the three instructions below, popping one stack value and de
   7. 79 ⇒ “O”
   8. 82 ⇒ “R”
   9. 76 ⇒ “L”
-     10\. 68 ⇒ “D”
+  10. 68 ⇒ “D”
 
 **b. PC 28** – `3:35` ⇒ **`DEC_HEAP`** (1 param)
 
@@ -311,7 +316,7 @@ Each iteration runs the three instructions below, popping one stack value and de
 
 ---
 
-15. **PC 32** – `3:01` ⇒ **`HALT`**
+1.  **PC 32** – `3:01` ⇒ **`HALT`**
 
     - Stop execution
 
@@ -322,3 +327,13 @@ Each iteration runs the three instructions below, popping one stack value and de
 ```
 HELLOWORLD
 ```
+
+This splang is quite simple, but it is extendable to inputing any given length string, and printing it to the screen. The only limitation is the length of the string, which is limited by the number of songs in the playlist, usually around 10,000 songs for Spotify. However, through your own custom playlist definition, you can bypass this limitation to run local splangs.
+
+## Fibonacci
+
+In development
+
+# Conclusion
+
+Throughout the process of creating Splang, I learned a lot about the challenges and considerations that go into designing a programming language. From choosing the right attributes to represent commands, to designing the syntax and semantics of the language, I gained a deeper understanding of the complexities involved in language design. I also learned about the importance of testing and debugging, and revising my design choices based on feedback and testing results. Overall, this project was a valuable experience that allowed me to explore the world of programming languages and gain practical skills in language design and implementation.
