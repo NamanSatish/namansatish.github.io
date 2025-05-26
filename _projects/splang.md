@@ -52,7 +52,7 @@ _styles: >
 
 # Abstract
 
-In this project, I will be creating a programming language called **Splang**. The language is designed to be a fun music-based turning-complete esolang. The language is inspired by the importance a playlist has in a person's life, a way to express oneself, interact with others, and share experiences. With this in mind, I wanted to create a language that is not only functional, but similar to the process of creating a playlist, requires thought and care in the placement of each element. A language that seamlessly enables artistic expression in a functional language.
+**splang** is a music-inspired, Turing-complete esolang that blends artistic expression with computational logic. **splang** is inspired by the personal significance or emotions a playlist can elecit, as way to express oneself, interact with others, or share experiences. With this in mind, **splang** aims to be both playful and expressive, encouraging programmers to compose their logic with the same intention and nuance that goes into crafting the perfect playlist. A language that seamlessly enables artistic expression in a functional language.
 
 <div class="container splang-logo">
   {% include figure.liquid 
@@ -70,11 +70,11 @@ In this project, I will be creating a programming language called **Splang**. Th
   </div>
 </div>
 
-Splang is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. This **feature-rich IDE** enables users to create, edit, share, and collaborate on Splang programs through their playlist interface, all while listening to music! A public method to execute Splang programs is in development, but in the interim, users can run their programs locally through the [Splang interpreter](https://github.com/NamanSatish/splang) written in Python.
+**splang** is designed to work with Spotify, a music streaming service and application developed by Spotify Technology S.A. Their **feature-rich IDE** enables users to create, edit, share, and collaborate on **splang** programs through their playlist interface, all while listening to music! A public method to execute **splang** programs is in development, but in the interim, users can run their programs through the [Splang interpreter](https://github.com/NamanSatish/splang) written in Python. Just `pip install splang` and run `splang -hello` to run your first **splang**.
 
 # Language Design
 
-A large source of my inspiration for this project came from Piet, a language that uses images as code. In a similar vein, I wanted to create a language that uses music as code, specifically allowing users to create a playlist as a program. While an initial search of music based esolangs showed impressive languages such as PianoFuck by Sam Poder, I only encountered one which operated with Spotify, **Slang**, a esolang using Spotify songs to replace BF's 8 commands. This language demonstrated the potential of using music and playlists as a programming language, but ultimately the language was an extension of BF, and I wanted to create a language that was more expressive, flexible, and took advantage of the choice of songs in a playlist rather than just using genres as commands. I would additionally like to thank Sid for his inspiration in the idea of using music as code.
+A large source of my inspiration for this project came from Piet, a language that uses images as code. In a similar vein, I wanted to create a language that uses music as code, specifically allowing users to create a playlist as a program. While an initial search of music based esolangs showed impressive languages such as PianoFuck by Sam Poder, I only encountered one which operated with Spotify, **Slang**, a esolang using Spotify songs to replace BF's 8 commands. This language demonstrated the potential of using music and playlists as a programming language, but ultimately the language was an extension of BF, and I wanted to create a language that was more expressive, flexible, and took advantage of the choice of songs in a playlist rather than just using genres as commands. I would additionally like to thank Siddhant Vasudevan for his inspiration in the idea of using music as code.
 
 Additionally, I wanted to experience the process of creating a language from scratch, and the challenges that come with it. Instead of using a pre-existing language as a base, and simply implementing a transpiler, I wanted to create a language that was unique and had its own set of commands, syntax, and semantics. This would allow me to explore the design choices that go into creating a language, and the trade-offs that come with those choices.
 
@@ -112,13 +112,13 @@ In the same way, we need to ensure that the distribution of these seconds values
 
 As we can see from the charts above, the distribution of seconds values is relatively even, with no statistically significant outliers.
 
-The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts. I started my thoughts with the concepts from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters, and further built upon that with the RISC-V instruction set.
+The next step was to determine what kind of language I wanted to create. While a BF extension was a possibility, it had already been done, and even if I could have improved upon it, I had much more than 8 command possibilities. I wanted my language to have built in data structures, such as a stack and heap, and to be able to use the playlist to interact with the data structures. I also wanted to have loops, conditionals, ways to interact with stdin/stdout, labels, jumps, NOPs, and halts. I started my thoughts with the concepts from Whitespace, having certain sequences being treated as IMP sequences, and following songs acting as parameters, and further built upon that with ideas gained from my knowledge of the RISC-V instruction set.
 
-Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining 11 commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
+Splang will **not** recieve an update until a time comes that a consensus within the community is reached on the functionality of the remaining commands, however in their current state, they are left to the end user as an opportunity for custom implementations.
 
-As such, I give you **Splang v1.0 Language Reference**.
+As such, I present the **Splang v1.0 Language Reference**.
 
-# Splang v1.0 Language Reference
+# Splang v1.0 Language Reference {#splang-v1-0-language-reference}
 
 | **Keyterm** | **Description**                                                                       |
 | ----------- | ------------------------------------------------------------------------------------- |
@@ -197,6 +197,8 @@ As such, I give you **Splang v1.0 Language Reference**.
 
 There is inconsistent conversion from duration_ms to displayed duration in the Spotify UI. For example, Sweet Home Alabama by Lynyrd Skynyrd is displayed as 4:43, but the duration_ms is 283800. When playing the song, it may initially flash 4:44 in the playback bar UI, but will then change to 4:43. Different times are displayed on the WebUI vs the CEF application. While timings were completely unpredictable in the WebUI, the CEF application was consistent with most songs, 89 of my randomly sampled songs successfully converted to the correct seconds value, however Sweet Home Alabama never achieved the 4:43 seconds value without ruining the conversion for other songs.
 
+The only consistent way to get the correct seconds value is to use the CEF application's displayed seconds value once added to your playlist. Search results on the CEF application may occasionally display the correct seconds value, but this is not guaranteed.
+
 <div class="container l-page">
     <div class="row align-items-center text-center">
         <div class="col">
@@ -210,7 +212,7 @@ There is inconsistent conversion from duration_ms to displayed duration in the S
     </div>
 </div>
 
-Our takeaway should be : Splang may have recieved its v1.0 release, but it is clear the **IDE is still in ongoing development**.
+My conclusion is that **splang**'s IDE is still in ongoing development by the Spotify team!
 
 # Examples
 
@@ -228,7 +230,7 @@ Here is [Hello World in Splang](https://open.spotify.com/playlist/7cPsICy0U7WM8Q
 
 This splang interacts with the stdout, as well as the heap and stack. It takes advantage of loops, jumps, and labels to print **HELLOWORLD**. Shareable through the link `https://open.spotify.com/playlist/7cPsICy0U7WM8Q67SuYXds`, which could be compressed to `7cPsICy0U7WM8Q67SuYXds`, the only part of the URL that is needed to run the program, Splang is clearly a very efficient language and has the incredible property of all programs taking the same amount of local storage, 22 bytes! We will have to thank the IDE developers for providing this service along with our subscription!
 
-Here’s a step-by-step walkthrough of how your playlist program prints **HELLOWORLD**:
+Here’s a step-by-step walkthrough of how this playlist program prints **HELLOWORLD**:
 
 1. **PC 0** – `duration_min = 4:44` ⇒ seconds = 44 ⇒ **`READ_CHAR`** (1 param)
 
@@ -330,7 +332,7 @@ Each iteration runs the three instructions below, popping one stack value and de
 
 - Param at PC 31: `track_id = 'Think About'` ⇒ check `heap['Think About']`
 - If `heap['Think About'] != 0`, jump back to PC 27; otherwise fall through
-- After 10 iterations, `heap['special']` goes from 10 down to 0, so the loop stops.
+- After 10 iterations, `heap['Think About']` goes from 10 down to 0, so the loop stops.
 
 ---
 
@@ -350,7 +352,158 @@ This splang is quite simple, but it is extendable to inputing any given length s
 
 ## Fibonacci
 
-In development
+Here is [Fibonacci in Splang](https://open.spotify.com/playlist/7dCpC1vb66ar1eyYebERl0?si=0967712d864749ae), a more complex program that computes the fibonacci sequence and prints the first 406 Fibonacci numbers to the screen.
+
+<div class="container l-page">
+    <div class="row align-items-center text-center">
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7dCpC1vb66ar1eyYebERl0?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+</div>
+
+This splang demonstrates use of loops and function calling, yet additionally demonstrates that recursion is possible with careful stack design, although our computation here is sequential.
+
+---
+
+### 🟩 SETUP PHASE
+
+1. **PC 0** – `"Push It to the Limit – Bonus"` ⇒ **`PUSH_LS`** (1 param)
+
+   - Param at PC 1: `"1999"` ⇒ `last_second = 9` ⇒ push 9
+   - Stack : `[9]`
+
+2. **PC 2** – `"One More Time"` ⇒ **`PUSH_LS`** (1 param)
+
+   - Param at PC 3: `"90210"` ⇒ `last_second = 9` ⇒ push 9
+   - Stack : `[9, 9]`
+
+3. **PC 4** – `"One More Time"` ⇒ **`PUSH_LS`** (1 param)
+
+   - Param at PC 5: `"1 2 365 4 Me"` ⇒ `last_second = 5` ⇒ push 5
+   - Stack : `[9, 9, 5]`
+
+4. **PC 6** – `"The Times They Are A-Changin'"` ⇒ **`MUL`** (no params)
+
+   - Compute: `5 × 9 = 45`
+   - Stack : `[9, 45]`
+
+5. **PC 7** – `"The Times They Are A-Changin'"` ⇒ **`MUL`** (no params)
+
+   - Compute: `9 × 45 = 405`
+   - Stack : `[405]`
+
+6. **PC 8** – `"Store"` ⇒ **`STORE`** (1 param)
+
+   - Param at PC 9: `"Variable"` ⇒ pop 405, store `heap["Variable"] = 405`
+   - Stack : `[]`
+   - Heap : `{ "Variable": 405 }`
+
+---
+
+### 🟨 SEED INITIAL FIBONACCI TERMS
+
+7. **PC 10** – `"Pump Up The Jam"` ⇒ **`PUSH_LS`** (1 param)
+
+   - Param at PC 11: `"Zero To Hero"` ⇒ `last_second = 0` ⇒ push 0
+   - Stack : `[0]`
+   - Heap : `{ "Variable": 405 }`
+
+8. **PC 12** – `"Push It"` ⇒ **`PUSH_FS`** (1 param)
+
+   - Param at PC 13: `"One Thing"` ⇒ `first_second = 1` ⇒ push 1
+   - Stack : `[0, 1]`
+   - Heap : `{ "Variable": 405 }`
+
+---
+
+### 🏷️ LOOP AND FIB CALL
+
+9. **PC 14** – `"Label"` ⇒ **`LABEL`** (1 param)
+
+   - Param at PC 15: `"Variable"` ⇒ define label `"Variable"` at PC 16
+   - Stack : `[0, 1]`
+   - Heap : `{ "Variable": 405 }`
+
+10. **PC 16** – `"Call You"` ⇒ **`CALL`** (1 param)
+
+    - Param at PC 17: `"Fibonacci (Part 1)"` ⇒ jump to FIB function
+    - Stack : `[0, 1]`
+    - RA Stack : `[18]`
+    - Heap : `{ "Variable": 405 }`
+
+11. **PC 18** – `"Godzilla-1.0 Elegy"` ⇒ **`DEC_HEAP`** (1 param)
+
+    - Param at PC 19: `"Variable"` ⇒ `heap["Variable"] -= 1` ⇒ now 404
+    - Stack : `[1, 1]`
+    - Heap : `{ "Variable": 404 }`
+
+12. **PC 20** – `"Jumpin Jumpin"` ⇒ **`JUMPNZ_HEAP`** (1 param)
+
+    - Param at PC 21: `"Variable"` ⇒ jump to label `"Variable"` (PC 14) if heap ≠ 0
+    - Stack : `[1, 1]`
+    - Heap : `{ "Variable": 404 }`
+
+---
+
+### 🟥 PROGRAM EXIT
+
+13. **PC 22** – `"Ain’t No Stoppin’ Us Now"` ⇒ **`HALT`** (no params)
+
+    - Executed only when `heap["Variable"] == 0`
+    - Stack : $$[x_n, x_{n+1}]$$
+    - Heap : `{ "Variable": 0 }`
+
+---
+
+## 🔁 FIB FUNCTION
+
+14. **PC 23** – `"Label"` ⇒ **`LABEL`** (1 param)
+
+    - Param at PC 24: `"Fibonacci (Part 1)"` ⇒ define label `"Fibonacci (Part 1)"` at PC 25
+    - Stack : $$[x_n, x_{n+1}]$$
+    - Heap : $$\{\text{Variable}: n\}$$
+
+15. **PC 25** – `"Duplicates"` ⇒ **`DUP`** (no params)
+
+    - Duplicate top of stack: $$x_{n+1}$$
+    - Stack : $$[x_n, x_{n+1}, x_{n+1}]$$
+
+16. **PC 26** – `"Store"` ⇒ **`STORE_TOP`** (1 param)
+
+    - Param at PC 27: `"Old Recliners"` ⇒ pop $$x_{n+1}$$, store in `heap["Old Recliners"] =` $$x_{n+1}$$
+    - Stack : $$[x_n, x_{n+1}]$$
+    - Heap : $$\{\text{Variable: } n, \text{Old Recliners: } x_{n+1}\}$$
+
+17. **PC 28** – `"Wasted Summers"` ⇒ **`ADD`** (no params)
+
+    - Compute: $$x_n + x_{n+1} = x_{n+2}$$
+    - Stack : $$[x_{n+2}]$$
+
+18. **PC 29** – `"Duplicates"` ⇒ **`DUP`** (no params)
+
+    - Duplicate top of stack: $$x_{n+2}$$
+    - Stack : $$[x_{n+2}, x_{n+2}]$$
+
+19. **PC 30** – `"Say It Like You Mean It"` ⇒ **`STDOUT_INT`** (no params)
+
+    - Print $$x_{n+2}$$ as an integer
+    - Stack : $$[x_{n+2}]$$
+
+20. **PC 31** – `"Get Busy"` ⇒ **`LOAD_TOP`** (1 param)
+
+    - Param at PC 32: `"Old Recliners"` ⇒ push $$x_{n+1}$$ `= heap["Old Recliners"]`
+    - Stack : $$[x_{n+2}, x_{n+1}]$$
+
+21. **PC 33** – `"Written In Reverse"` ⇒ **`SWAP`** (no params)
+
+    - Swap top two stack values
+    - Stack : $$[x_{n+1}, x_{n+2}]$$
+
+22. **PC 34** – `"half return"` ⇒ **`RETURN`** (no params)
+
+    - Return to address in RA Stack
+    - RA Stack : `[]`
+    - Stack : $$[x_{n+1}, x_{n+2}]$$ (used as inputs for next Fibonacci iteration)
+    - Heap : unchanged
 
 # Conclusion
 
