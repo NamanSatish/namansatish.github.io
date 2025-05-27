@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Student at the University of California, Berkeley.
+subtitle: Graduate from University of California, Berkeley.
 
 profile:
   align: right
@@ -15,8 +15,8 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
 ---
 
-Hello, my name is Naman Satish. I am a student at the University of California, Berkeley. I am currently pursuing a Bachelor's degree in Electrical Engineering and Computer Sciences.
+Hi, I'm Naman Satish, a recent graduate from UC Berkeley with a B.S. in Electrical Engineering and Computer Science. I’m passionate about building intelligent, human-centered systems that span machine learning, computer vision, cybersecurity, and scalable full-stack development. My work has ranged from researching deep learning methods to model neurodegeneration in MRI data, to building backend systems supporting thousands of users, to automating threat detection pipelines using real-world telemetry.
 
-I am interested in the intersection of computer science and biology, and I am currently working on a project that involves using machine learning to predict the change in brain volume of patients with Multiple Sclerosis.
+At the core, I enjoy solving complex, interdisciplinary problems, whether it is through writing elegant algorithms, designing robust architectures, explore new creative approches, or collaborating with diverse teams to ship meaningful features.
 
-My passions include photography, specifically computational photography. Whether it is stacking, or mergin, I enjoy experimenting with different techniques and software to create unique images from my travels.
+Outside of engineering, I’m deeply interested in computational photography. I love applying techniques like image mosaicking, depth mapping, and Laplacian blending to tell visual stories from my travels. Photography is where my creative side meets my technical curiosity.
